@@ -1,0 +1,65 @@
+#lang rhombus
+import:
+  "model-picts.rhm" open
+  slideshow open
+
+slide(lang1)
+slide(ax1)
+slide(lang2)
+
+/*
+
+talk outline:
+
+- semantics via syntax;
+  --> goal of the talk: learn to read the rules and get a sense of a language
+
+Key pieces: grammar, type system, evaluation rules
+  grammar => implicitly trees (fully parenthesized, even if not explicit)
+  type system and evaluation rules ==> sequents that define relations.
+
+Let's start with a grammar.
+
+- booleans: and, or, not, tt, ff
+- numbers: constants, +, plus a δ function.
+
+Four rules:
+
+(and tt tt) => tt
+(and tt ff) => ff
+(and ff tt) => ff
+(and ff ff) => ff
+
+E ::= (and E e) | (and e E) | hole
+
+problem! no what we intend.
+
+fix it:
+
+E ::= (and E e) | (and v E) | hole
+
+but what if we want short-circuiting?
+
+vs two rules:
+
+(and tt e) => e
+(and ff e) => ff
+
+with the same contexts, we're in trouble
+
+E ::= (and E e) | hole
+
+Let's add state.
+
+Variables, substitution?
+
+Exceptions, Continuations
+
+evaluation context that allows reduction everywhere vs left-to-right order
+  ... can use the same idea to capture allowed computations (compiler optimizations)
+      vs a nondeterministic semantics
+
+type system rules out e being a number but not that it contains an error
+
+
+*/

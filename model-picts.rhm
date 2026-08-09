@@ -1,0 +1,13 @@
+#lang rhombus
+import:
+  "model.rkt"
+  pict open
+
+export:
+  ax1
+  lang1
+  lang2
+
+def lang1 = Pict.from_handle(model.lang1)
+def lang2 = Pict.from_handle(model.lang2)
+def ax1 = Pict.from_handle(model.ax1)
