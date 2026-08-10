@@ -90,13 +90,15 @@
                    [non-terminal-style body-text-style]
                    [default-style body-text-style]
                    [non-terminal-subscript-style (cons 'subscript body-text-style)]
-                   [non-terminal-superscript-style (cons 'superscript body-text-style)])
+                   [non-terminal-superscript-style (cons 'superscript body-text-style)]
+                   [judgment-form-no-bar-when-no-premises #t])
       (thunk))))
 
-(define (jf->pict jf)
+(define (jf->pict jf #:cases [cases #f])
   (with-the-rewriters
       (λ ()
-        (render-judgment-form jf))))
+        (parameterize ([judgment-form-cases cases])
+          (render-judgment-form jf)))))
 
 (define (grammar->pict L #:nts [_nts #f])
   (define nts
