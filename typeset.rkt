@@ -1,6 +1,6 @@
 #lang racket
 (require racket/gui/base redex/pict pict)
-(provide jf->pict grammar->pict)
+(provide jf->pict grammar->pict t->pict)
 
 (define font-size 24)
 
@@ -46,12 +46,14 @@
 (define (⟨-pict) (mtext "⟨"))
 (define the-arrow #;"→" "⟶")
 
-(define (-->ax-rewrite lws)
+(define (-->ax1-rewrite lws)
   (match lws
-    [(list _open _--> e1 env e2 _close)
-     (generic-arrow-rewrite (list e1 env) (list e2) "ax" #f)]
     [(list _open _--> e1 e2 _close)
      (generic-arrow-rewrite (list e1) (list e2) "ax" #f)]))
+(define (-->ax2-rewrite lws)
+  (match lws
+    [(list _open _--> Σ1 e1 Σ2 e2 _close)
+     (generic-arrow-rewrite (list Σ1 e1) (list Σ2 e2) "ax" #f)]))
 
 (define (generic-arrow-rewrite before-items after-items subscript star?)
   (define before-brackets? (not (= (length before-items) 1)))
@@ -76,9 +78,20 @@
        (list (just-after (⟩-pict) (last after-items)))
        '())))
 
+(define (extend-rewrite lws)
+  (list ""
+        (list-ref lws 2)
+        " ⊕ { "
+        (list-ref lws 3)
+        " = "
+        (list-ref lws 4)
+        " }"))
+
 (define (with-the-rewriters thunk)
   (with-compound-rewriters
-      (['ax-->1 -->ax-rewrite])
+      (['ax-->1 -->ax1-rewrite]
+       ['ax-->2 -->ax2-rewrite]
+       ['extend extend-rewrite])
     (parameterize ([label-font-size font-size]
                    [default-font-size font-size]
                    [metafunction-font-size font-size]
@@ -106,3 +119,9 @@
         '(e)))
   (with-the-rewriters
       (λ () (render-language L #:nts nts))))
+
+
+(define-syntax-rule
+  (t->pict L t)
+  (with-the-rewriters
+      (λ () (term->pict L t))))

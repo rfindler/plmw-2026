@@ -5,11 +5,24 @@ import:
 
 slide(lang1)
 slide(ax1)
+slide(nested_example)
+slide(ax2)
 slide(lang2)
 
 /*
 
 talk outline:
+
+
+1. language of booleans
+2. boolean axioms
+3. but what if they are nested?
+4. okay, there are different things we could do here but
+   before we do any of them, let's keep things real: ordering matters. introducing state (but errors would also do!)
+5. now, back to the original problem, keeping in mind that order of evaluation matters.
+
+
+
 
 - semantics via syntax;
   --> goal of the talk: learn to read the rules and get a sense of a language
