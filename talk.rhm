@@ -6,8 +6,10 @@ import:
 slide(lang1)
 slide(ax1)
 slide(nested_example)
-slide(ax2)
 slide(lang2)
+slide(ax2)
+slide(ax3)
+slide(lang3)
 
 /*
 

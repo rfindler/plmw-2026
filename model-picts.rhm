@@ -6,12 +6,16 @@ import:
 export:
   ax1
   ax2
+  ax3
   lang1
   lang2
+  lang3
   nested_example
 
 def lang1 = Pict.from_handle(model.lang1)
 def lang2 = Pict.from_handle(model.lang2)
+def lang3 = Pict.from_handle(model.lang3)
 def ax1 = Pict.from_handle(model.ax1)
 def ax2 = Pict.from_handle(model.ax2)
+def ax3 = Pict.from_handle(model.ax3)
 def nested_example = Pict.from_handle(model.nested_example)

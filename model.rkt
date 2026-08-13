@@ -1,6 +1,6 @@
 #lang racket
 (require redex/reduction-semantics pict "typeset.rkt")
-(provide ax1 ax2 lang1 lang2 nested_example)
+(provide ax1 ax2 ax3 lang1 lang2 lang3 nested_example)
 
 (define-language L
   (e ::=
@@ -17,7 +17,11 @@
      (not E)))
 
 (define-extended-language L2 L
-  (e ::= .... (let x e) (set x))
+  (e ::= ....
+     (let x e)
+     (set x)
+     (seq e e))
+  (x ::= variable-not-otherwise-mentioned)
   #:binding-forms
   (let x e))
 
@@ -89,11 +93,14 @@
   [------------------ "notf"
    (ax-->2 Σ (not ff) Σ tt)]
 
+  [------------------ "let"
+   (ax-->2 Σ (let x e) (extend Σ x ff) e)]
+
   [------------------ "set"
    (ax-->2 Σ (set x) (extend Σ x tt) tt)]
 
-  [------------------ "let"
-   (ax-->2 Σ (let x e) (extend Σ x ff) e)])
+  [------------------ "seq"
+   (ax-->2 Σ (seq b e) Σ e)])
 
 (define-judgment-form L
   #:mode (ax--> I O)
@@ -135,10 +142,15 @@
                         (jf->pict ax-->1 #:cases '("ortt" "ortf" "orft" "orff"))
                         (jf->pict ax-->1 #:cases '("nott" "notf"))))
 (define lang1 (grammar->pict L #:nts '(e b)))
-(define lang2 (grammar->pict L #:nts '(E)))
 (define nested_example (t->pict L (or (and tt ff)
                                       tt)))
+(define lang2 (grammar->pict L2 #:nts '(e b)))
+(define lang3 (grammar->pict L #:nts '(E)))
+
 (define ax2 (htl-append 60
+                        (jf->pict ax-->2 #:cases '("let" "set" "seq"))))
+
+(define ax3 (htl-append 60
                         (jf->pict ax-->2 #:cases '("andtt" "andtf" "andft" "andff"))
                         (jf->pict ax-->2 #:cases '("ortt" "ortf" "orft" "orff"))
-                        (jf->pict ax-->2 #:cases '("nott" "notf" "let" "set"))))
+                        (jf->pict ax-->2 #:cases '("nott" "notf"))))
