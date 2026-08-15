@@ -17,7 +17,7 @@ fun to_pict(sexp):
             each x in sexp.to_list()
             loop(x)
       | sexp is_a Symbol:
-          base.#{symbol->string}(sexp).to_string()
+          to_string(sexp)
       | ~else: sexp
   def [_ , tree_pict] = to_pict_helper(converted_sexp)
   tree_pict
@@ -77,6 +77,6 @@ fun half_gap_size(p, parent_pict, child_pict):
   def values(cx,cy) = Find.top(child_pict).in(p)
   (cy-py) / 2
 
-
-to_pict(["or",["and","tt","ff"],"ff"])
-to_pict(["let","x",["and","x",["seq",["set","x"],"tt"]]])
+module main:
+  to_pict(["or",["and","tt","ff"],"ff"])
+  to_pict(["let","x",["and","x",["seq",["set","x"],"tt"]]])
