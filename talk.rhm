@@ -2,6 +2,7 @@
 import:
   "model-picts.rhm" open
   "state_ex.rhm" open
+  "sexp_to_tree.rhm" open
   slideshow open
 
 slide(lang1)
@@ -11,6 +12,9 @@ slide(lang2)
 slide(ax2)
 slide(ax3)
 slide(ex2_slide)
+slide(stack.left(~sep: 80,
+                 beside(~sep: 100, ex1 , to_pict(ex1_sexp)),
+                 beside(~sep: 100, ex2 , to_pict(ex2_sexp))))
 slide(lang3)
 
 /*

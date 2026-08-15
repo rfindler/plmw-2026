@@ -1,0 +1,82 @@
+#lang rhombus
+
+import:
+  pict open
+  lib("racket/base.rkt")
+  "typeset.rkt"
+
+export:
+  to_pict
+
+fun to_pict(sexp):
+  def converted_sexp:
+    recur loop(sexp = sexp):
+      cond
+      | sexp is_a Listable:
+          for List:
+            each x in sexp.to_list()
+            loop(x)
+      | sexp is_a Symbol:
+          base.#{symbol->string}(sexp).to_string()
+      | ~else: sexp
+  def [_ , tree_pict] = to_pict_helper(converted_sexp)
+  tree_pict
+
+fun
+| to_pict_helper([name :: String, x, ...]):
+    when [x, ...].length() < 1
+    | error("need at least two children for every internal node")
+    def parent_pict = Pict.from_handle(typeset.str_to_tt(name))
+    def [[child_picts, subtree_picts], ...] = [to_pict_helper(x),...]
+    def combined_child_pict = beside.topline(~sep: 10, subtree_picts, ...)
+    def values(leftmost_child_x, rightmost_child_x):
+      for values(left_x = #false, right_x = #false):
+        each child_pict in [child_picts, ...]
+        def values(cx,cy) = Find.center(child_pict).in(combined_child_pict)
+        cond
+        | left_x: values(math.min(cx, left_x), math.max(cx, right_x))
+        | ~else: values(cx,cx)
+    def with_no_lines = stack.left(~sep: 40,
+                                   beside.baseline(blank(~width: leftmost_child_x + (rightmost_child_x - leftmost_child_x)/2 - parent_pict.width/2, ~height: 0),parent_pict),
+                                   combined_child_pict)
+    def with_up_lines:
+      for values(p = with_no_lines):
+        each child_pict in [child_picts, ...]
+        add_up_line(p, parent_pict, child_pict)
+    [parent_pict,
+     add_across_line(add_down_line(with_up_lines, parent_pict, List.first([child_picts, ...])),
+                     parent_pict,
+                     [subtree_picts, ...],
+                     leftmost_child_x,
+                     rightmost_child_x)]
+| to_pict_helper(x):
+    def p = Pict.from_handle(typeset.str_to_tt(x.to_string()))
+    [p,p]
+
+fun add_up_line(p, parent_pict, child_pict):
+  def hgs = half_gap_size(p, parent_pict, child_pict)
+  pin(line(~dx: 0, ~dy: hgs),
+      ~on: p,
+      ~at: Find.center_top(child_pict).translate(0,-hgs))
+
+fun add_down_line(p, parent_pict, child_pict):
+  def hgs = half_gap_size(p, parent_pict, child_pict)
+  pin(line(~dx: 0, ~dy: hgs),
+      ~on: p,
+      ~at: Find.center_bottom(parent_pict))
+
+fun add_across_line(p, parent_pict, child_picts, leftmost_child_x, rightmost_child_x):
+  def hgs = half_gap_size(p, parent_pict, List.first(child_picts))
+  def values(parent_x, parent_y) = Find.center_bottom(parent_pict).in(p)
+  pin(line(~dx: rightmost_child_x - leftmost_child_x, ~dy: 0),
+      ~on: p,
+      ~at: Find.top_left(p).translate(leftmost_child_x, parent_y+hgs))
+
+fun half_gap_size(p, parent_pict, child_pict):
+  def values(px,py) = Find.bottom(parent_pict).in(p)
+  def values(cx,cy) = Find.top(child_pict).in(p)
+  (cy-py) / 2
+
+
+to_pict(["or",["and","tt","ff"],"ff"])
+to_pict(["let","x",["and","x",["seq",["set","x"],"tt"]]])

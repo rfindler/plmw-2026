@@ -1,7 +1,8 @@
 #lang racket
 (require redex/reduction-semantics pict "typeset.rkt")
-(provide ax1 ax2 ax3 lang1 lang2 lang3 ex1
-         ex2 ex2_1 ex2_2 ex2_3 ex2_4 ex2_5 ex2_6 ex2_st1 ex2_st2)
+(provide ax1 ax2 ax3 lang1 lang2 lang3
+         ex1 ex1_sexp
+         ex2 ex2_sexp ex2_1 ex2_2 ex2_3 ex2_4 ex2_5 ex2_6 ex2_st1 ex2_st2)
 
 (define-language L
   (e ::=
@@ -234,6 +235,7 @@
 (define lang1 (grammar->pict L #:nts '(e b)))
 (define ex1 (t->pict L (or (and tt ff)
                            tt)))
+(define ex1_sexp '(or (and tt ff) tt))
 (define lang2 (grammar->pict L2 #:nts '(e b)))
 (define lang3 (grammar->pict L #:nts '(C)))
 
@@ -253,6 +255,10 @@
                           (and x
                                (seq (set x)
                                     tt)))))
+(define ex2_sexp '(let x
+                    (and x
+                         (seq (set x)
+                              tt))))
 (define ex2_1 (t->pict L2 (and x
                                (seq (set x)
                                     tt))))

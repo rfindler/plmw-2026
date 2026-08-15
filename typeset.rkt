@@ -1,6 +1,6 @@
 #lang racket
 (require racket/gui/base redex/pict pict)
-(provide jf->pict grammar->pict t->pict)
+(provide jf->pict grammar->pict t->pict str_to_tt)
 
 (define font-size 32)
 
@@ -140,8 +140,12 @@
   (with-the-rewriters
       (λ () (render-language L #:nts nts))))
 
-
 (define-syntax-rule
   (t->pict L t)
   (with-the-rewriters
       (λ () (term->pict L t))))
+
+(define (str_to_tt str)
+  (with-the-rewriters
+      (λ ()
+        (text str (literal-style) (default-font-size)))))
