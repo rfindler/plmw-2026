@@ -10,7 +10,16 @@ export:
   lang1
   lang2
   lang3
-  nested_example
+  ex1
+  ex2
+  ex2_1
+  ex2_2
+  ex2_3
+  ex2_4
+  ex2_5
+  ex2_6
+  ex2_st1
+  ex2_st2
 
 def lang1 = Pict.from_handle(model.lang1)
 def lang2 = Pict.from_handle(model.lang2)
@@ -18,4 +27,14 @@ def lang3 = Pict.from_handle(model.lang3)
 def ax1 = Pict.from_handle(model.ax1)
 def ax2 = Pict.from_handle(model.ax2)
 def ax3 = Pict.from_handle(model.ax3)
-def nested_example = Pict.from_handle(model.nested_example)
+def ex1 = Pict.from_handle(model.ex1)
+def ex2 = Pict.from_handle(model.ex2)
+def ex2_1 = Pict.from_handle(model.ex2_1)
+def ex2_2 = Pict.from_handle(model.ex2_2)
+def ex2_3 = Pict.from_handle(model.ex2_3)
+def ex2_4 = Pict.from_handle(model.ex2_4)
+def ex2_5 = Pict.from_handle(model.ex2_5)
+def ex2_6 = Pict.from_handle(model.ex2_6)
+def ex2_st1 = Pict.from_handle(model.ex2_st1)
+def ex2_st2 = Pict.from_handle(model.ex2_st2)
+

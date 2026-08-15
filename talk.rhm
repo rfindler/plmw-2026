@@ -1,14 +1,16 @@
 #lang rhombus
 import:
   "model-picts.rhm" open
+  "state_ex.rhm" open
   slideshow open
 
 slide(lang1)
 slide(ax1)
-slide(nested_example)
+slide(ex1)
 slide(lang2)
 slide(ax2)
 slide(ax3)
+slide(ex2_slide)
 slide(lang3)
 
 /*
@@ -21,6 +23,7 @@ talk outline:
 3. but what if they are nested?
 4. okay, there are different things we could do here but
    before we do any of them, let's keep things real: ordering matters. introducing state (but errors would also do!)
+   show an example where if you do things in the wrong order you get the wrong answer
 5. now, back to the original problem, keeping in mind that order of evaluation matters.
 
 

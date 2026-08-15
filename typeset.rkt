@@ -2,7 +2,7 @@
 (require racket/gui/base redex/pict pict)
 (provide jf->pict grammar->pict t->pict)
 
-(define font-size 24)
+(define font-size 32)
 
 (define-syntax-rule
   (define-font id name)
@@ -87,11 +87,31 @@
         (list-ref lws 4)
         " }"))
 
+(define (⊕-rewrite lws)
+  (match-define (list _open _⊕ x _= b Σ _close) lws)
+  (unless (and (lw? Σ)
+               (equal? (lw-e Σ) '·))
+    (error '⊕-rewrite "cannot rewrite bigger stores"))
+  (list "{ "
+        x
+        " = "
+        b
+        " }"))
+
+(define (lookup-rewrite lws)
+  (list ""
+        (list-ref lws 2)
+        "("
+        (list-ref lws 3)
+        ")"))
+
 (define (with-the-rewriters thunk)
   (with-compound-rewriters
       (['ax-->1 -->ax1-rewrite]
        ['ax-->2 -->ax2-rewrite]
-       ['extend extend-rewrite])
+       ['extend extend-rewrite]
+       ['lookup lookup-rewrite]
+       ['⊕ ⊕-rewrite])
     (parameterize ([label-font-size font-size]
                    [default-font-size font-size]
                    [metafunction-font-size font-size]

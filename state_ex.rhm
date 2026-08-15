@@ -1,0 +1,36 @@
+#lang rhombus
+import:
+  "model-picts.rhm" open
+  slideshow open
+
+export:
+  ex2_slide
+
+def between_steps = 40
+
+def troublesome_step = stack.left(ex2_st1, ex2_1)
+
+def ex2_slide = beside.topline(~sep: between_steps,
+                               ex2,
+                               t("→").time_pad(~before: 1),
+                               stack.left(beside.topline(~sep: between_steps,
+                                                         stack.center(overlay(rectangle(~around: troublesome_step.ghost().pad(~horiz: 40,~vert: 10),
+                                                                                        ~line: #false,
+                                                                                        ~fill: "yellow",
+                                                                                        ~rounded: #'default,
+                                                                                        ~refocus: troublesome_step).time_pad(~before: 6),
+                                                                              troublesome_step),
+                                                                      t("↓").time_pad(~before: 3)),
+                                                         t("→").time_pad(~before: 1),
+                                                         stack.left(ex2_st1, ex2_2).time_pad(~before: 1),
+                                                         t("→*").time_pad(~before: 2),
+                                                         stack.left(ex2_st1, ex2_3).time_pad(~before: 2)).time_pad(~before: 1),
+                                          beside.topline(~sep: between_steps,
+                                                         stack.left(ex2_st2, ex2_4),
+                                                         t("→").time_pad(~before: 1),
+                                                         stack.left(ex2_st2, ex2_5).time_pad(~before: 1),
+                                                         t("→*").time_pad(~before: 2),
+                                                         stack.left(ex2_st2, ex2_6).time_pad(~before: 2)).time_pad(~before: 4)))
+
+module main:
+  slide(ex2_slide)
