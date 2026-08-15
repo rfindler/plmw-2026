@@ -1,0 +1,55 @@
+#lang rhombus
+import:
+  slideshow open
+  draw
+  rhombus/random
+export:
+  abstract_big_tree
+
+fun abstract_big_tree(w,h, subtree):
+  def p1 = draw.Pen(~color:
+                      cond
+                      | subtree:
+                          "gray"
+                      | ~else:
+                          "black")
+  def p2 = draw.Pen(~color: "black")
+  def p3 = draw.Pen(~color: "red")
+  dc(fun (dc :: draw.DC, dx, dy):
+       def r1 = random.Random(Array(1,1,1,1,2,1))
+       def r2 = random.Random(Array(1,1,1,1,2,1))
+       dc.pen := p1
+       dc.line([dx, dy+h], [dx+w/2, dy])
+       dc.line([dx+w, dy+h], [dx+w/2, dy])
+       when subtree
+       | recur loop(x = w/2, y = 0):
+           when y < h/4
+           | def nx = x + r2.random(3)-1
+             dc.pen := p3
+             dc.line([dx+x,dy+y],[dx+nx, dy+y+1])
+             dc.line([dx+x,dy+(h/2-y)],[dx+nx, dy+(h/2-(y+1))])
+             loop(nx,y+1)
+       recur loop(x = 0, y = h, in_subtree = #false):
+         def thing = subtree && x == math.floor(w/3)
+         when thing
+         | dc.pen := p2
+           dc.line([dx+x,dy+y],[dx+w/2,dy+h/2])
+           dc.line([dx+(w-x),dy+y],[dx+w/2,dy+h/2])
+         when x < w/2
+         | def ny = y + r1.random(3)-1
+           cond
+           | in_subtree:
+               dc.pen := p2
+           | ~else:
+               dc.pen := p1
+           dc.line([dx+x,dy+y],[dx+x+1,dy+ny])
+           dc.line([dx+(w-x),dy+y],[dx+(w-(x+1)),dy+ny])
+           loop(x+1,ny, in_subtree || thing),
+     ~width: w,
+     ~height: h)
+
+module main:
+  slide(
+    switch(abstract_big_tree(200,200,#false),
+           abstract_big_tree(200,200,#true)).scale(2).pad(100)
+    )

@@ -237,7 +237,7 @@
                            tt)))
 (define ex1_sexp '(or (and tt ff) tt))
 (define lang2 (grammar->pict L2 #:nts '(e b)))
-(define lang3 (grammar->pict L #:nts '(C)))
+(define lang3 (grammar->pict L #:nts '(E)))
 
 (define ax2 (vr-append 60
                        (frame (inset (vr-append
