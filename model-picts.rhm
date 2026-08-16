@@ -22,6 +22,7 @@ export:
   ex2_st2
   ex1_sexp
   ex2_sexp
+  let_ax get_ax set_ax seq_ax
 
 def lang1 = Pict.from_handle(model.lang1)
 def lang2 = Pict.from_handle(model.lang2)
@@ -41,3 +42,7 @@ def ex2_5 = Pict.from_handle(model.ex2_5)
 def ex2_6 = Pict.from_handle(model.ex2_6)
 def ex2_st1 = Pict.from_handle(model.ex2_st1)
 def ex2_st2 = Pict.from_handle(model.ex2_st2)
+def let_ax = Pict.from_handle(model.let_ax)
+def get_ax = Pict.from_handle(model.get_ax)
+def set_ax = Pict.from_handle(model.set_ax)
+def seq_ax = Pict.from_handle(model.seq_ax)

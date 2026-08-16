@@ -2,7 +2,8 @@
 (require redex/reduction-semantics pict "typeset.rkt")
 (provide ax1 ax2 ax3 lang1 lang2 lang3
          ex1 ex1_sexp
-         ex2 ex2_sexp ex2_1 ex2_2 ex2_3 ex2_4 ex2_5 ex2_6 ex2_st1 ex2_st2)
+         ex2 ex2_sexp ex2_1 ex2_2 ex2_3 ex2_4 ex2_5 ex2_6 ex2_st1 ex2_st2
+         let_ax get_ax set_ax seq_ax)
 
 (define-language L
   (e ::=
@@ -250,6 +251,11 @@
                                                   (t->pict L b)))
                                      10))
                        (jf->pict ax-->2 #:cases '("let" "set" "get" "seq"))))
+
+(define let_ax (jf->pict ax-->2 #:cases '("let")))
+(define set_ax (jf->pict ax-->2 #:cases '("set")))
+(define get_ax (jf->pict ax-->2 #:cases '("get")))
+(define seq_ax (jf->pict ax-->2 #:cases '("seq")))
 
 (define ex2 (t->pict L2 (let x
                           (and x
