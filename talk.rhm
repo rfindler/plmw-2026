@@ -7,22 +7,22 @@ import:
   "explain-evaluation-contexts.rhm" open
   slideshow open
 
-slide(lang1)
-slide(ax1)
-slide(ex1)
-slide(lang2)
-slide(ax2)
-slide(ax3)
-slide(ex2_slide)
+slide(lang1) // a first simple language: booleans
+slide(ax1)   // define rules for atomic computation steps: the axioms
+slide(ex1)   // what should happen when an axiom is nested: is that always ok?
+slide(lang2) // to answer, let’s first add state to the language
+slide(ax2)   // the state axioms; also add a store
+slide(ax3)   // the other axioms have to adapt
+slide(ex2_slide) // let’s return to the question of nesting, but in this example
 slide(stack.left(~sep: 80,
                  beside(~sep: 100, ex1 , to_pict(ex1_sexp)),
-                 beside(~sep: 100, ex2 , to_pict(ex2_sexp))))
+                 beside(~sep: 100, ex2 , to_pict(ex2_sexp)))) // expressions are really trees
 slide(switch(abstract_big_tree(200,200,#false),
-             abstract_big_tree(200,200,#true)).scale(2))
-slide(explain_evaluation_contexts)
-slide(ex2_with_new_rules)
-slide(t("Uh oh-- the next slide has the answer!"))
-slide(lang4)
+             abstract_big_tree(200,200,#true)).scale(2))  // maybe big ones; how do we express the rule?
+slide(explain_evaluation_contexts) // evaluation contexts: paths from the root to the axiom use
+slide(ex2_with_new_rules)  // those rules aren’t the usual ones: can we fix them?
+slide(t("Careful—the next slide has the answer!"))
+slide(lang4) // we need only two evaluation contexts
 
 /*
 
