@@ -6,17 +6,15 @@ import:
 export:
   abstract_big_tree
 
+fun random_step(r,biggest_random_step):
+  r.random(biggest_random_step*2+1)-biggest_random_step
+
 fun abstract_big_tree(w,h, subtree):
-  def p1 = draw.Pen(~color:
-                      cond
-                      | subtree:
-                          "gray"
-                      | ~else:
-                          "black")
+  def p1 = draw.Pen(~color: if subtree | "gray" | "black")
   def p2 = draw.Pen(~color: "black")
   def p3 = draw.Pen(~color: "red")
   dc(fun (dc :: draw.DC, dx, dy):
-       def r1 = random.Random(Array(1,1,1,1,2,1))
+       def r1 = random.Random(Array(1,11,0,1,2,0))
        def r2 = random.Random(Array(1,1,1,1,2,1))
        dc.pen := p1
        dc.line([dx, dy+h], [dx+w/2, dy])
@@ -24,27 +22,30 @@ fun abstract_big_tree(w,h, subtree):
        when subtree
        | recur loop(x = w/2, y = 0):
            when y < h/4
-           | def nx = x + r2.random(3)-1
+           | def nx = x + random_step(r2,1)
              dc.pen := p3
              dc.line([dx+x,dy+y],[dx+nx, dy+y+1])
              dc.line([dx+x,dy+(h/2-y)],[dx+nx, dy+(h/2-(y+1))])
              loop(nx,y+1)
-       recur loop(x = 0, y = h, in_subtree = #false):
-         def thing = subtree && x == math.floor(w/3)
-         when thing
+       recur loop(x = 0, yl = h, yr = h, in_subtree = #false):
+         def subtree_bottom = subtree && x == math.floor(w/3)
+         when subtree_bottom
          | dc.pen := p2
-           dc.line([dx+x,dy+y],[dx+w/2,dy+h/2])
-           dc.line([dx+(w-x),dy+y],[dx+w/2,dy+h/2])
-         when x < w/2
-         | def ny = y + r1.random(3)-1
+           dc.line([dx+x,dy+yl],[dx+w/2,dy+h/2])
+           dc.line([dx+(w-x),dy+yr],[dx+w/2,dy+h/2])
+         when x == math.floor(w/2)
+         | dc.line([dx + math.floor(w/2), dy + yl], [dx + math.ceiling(w/2), dy + yr])
+         when x < math.floor(w/2)
+         | def nyl = yl + random_step(r1,2)
+           def nyr = yr + random_step(r1,2)
            cond
-           | in_subtree:
+           | in_subtree || subtree_bottom:
                dc.pen := p2
            | ~else:
                dc.pen := p1
-           dc.line([dx+x,dy+y],[dx+x+1,dy+ny])
-           dc.line([dx+(w-x),dy+y],[dx+(w-(x+1)),dy+ny])
-           loop(x+1,ny, in_subtree || thing),
+           dc.line([dx+x,dy+yl],[dx+x+1,dy+nyl])
+           dc.line([dx+(w-x),dy+yr],[dx+(w-(x+1)),dy+nyr])
+           loop(x+1, nyl, nyr, in_subtree || subtree_bottom),
      ~width: w,
      ~height: h)
 
