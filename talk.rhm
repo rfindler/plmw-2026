@@ -4,6 +4,7 @@ import:
   "state_ex.rhm" open
   "sexp_to_tree.rhm" open
   "trees-with-subtrees.rhm" open
+  "explain-evaluation-contexts.rhm" open
   slideshow open
 
 slide(lang1)
@@ -18,7 +19,10 @@ slide(stack.left(~sep: 80,
                  beside(~sep: 100, ex2 , to_pict(ex2_sexp))))
 slide(switch(abstract_big_tree(200,200,#false),
              abstract_big_tree(200,200,#true)).scale(2))
-slide(lang3)
+slide(explain_evaluation_contexts)
+slide(ex2_with_new_rules)
+slide(t("Uh oh-- the next slide has the answer!"))
+slide(lang4)
 
 /*
 

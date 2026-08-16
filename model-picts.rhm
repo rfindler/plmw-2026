@@ -7,9 +7,11 @@ export:
   ax1
   ax2
   ax3
+  ax4
   lang1
   lang2
   lang3
+  lang4
   ex1
   ex2
   ex2_1
@@ -27,9 +29,11 @@ export:
 def lang1 = Pict.from_handle(model.lang1)
 def lang2 = Pict.from_handle(model.lang2)
 def lang3 = Pict.from_handle(model.lang3)
+def lang4 = Pict.from_handle(model.lang4)
 def ax1 = Pict.from_handle(model.ax1)
 def ax2 = Pict.from_handle(model.ax2)
 def ax3 = Pict.from_handle(model.ax3)
+def ax4 = Pict.from_handle(model.ax4)
 def ex1 = Pict.from_handle(model.ex1)
 def ex1_sexp = model.ex1_sexp
 def ex2 = Pict.from_handle(model.ex2)

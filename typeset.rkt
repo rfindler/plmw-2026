@@ -109,6 +109,7 @@
   (with-compound-rewriters
       (['ax-->1 -->ax1-rewrite]
        ['ax-->2 -->ax2-rewrite]
+       ['ax-->3 -->ax2-rewrite]
        ['extend extend-rewrite]
        ['lookup lookup-rewrite]
        ['⊕ ⊕-rewrite])

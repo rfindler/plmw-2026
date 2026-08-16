@@ -1,0 +1,43 @@
+#lang rhombus
+import:
+  "model-picts.rhm" open
+  slideshow open
+
+export:
+  explain_evaluation_contexts
+  ex2_with_new_rules
+
+def first_term = stack.left(
+  ~sep: 40,
+  ex2,
+  let_ax
+  )
+
+def second_term = stack.left(
+  ~sep: 40,
+  ex2_1,
+  get_ax,
+  set_ax
+  )
+
+def explain_evaluation_contexts:
+  beside(lang3,
+         beside(animate(fun (n): blank(~width: n*100, ~height: 0)),
+                switch(animate(~extent: 1,
+                               fun (n):
+                                 first_term.pad(~right: -(1-n)*first_term.width).clip()).sustain(),
+                       second_term.pad(~right: first_term.width - second_term.width))))
+
+def new_rules:
+  ax4
+
+
+def ex2_with_new_rules:
+  stack(ex2,
+        animate(fun (n): blank(~height: n*40, ~width: 0)),
+        animate(fun (n):
+                  new_rules.pad(~bottom: -(1-n)*new_rules.height).clip()).sustain())
+
+module main:
+  slide(explain_evaluation_contexts)
+  slide(ex2_with_new_rules)

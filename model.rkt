@@ -3,7 +3,8 @@
 (provide ax1 ax2 ax3 lang1 lang2 lang3
          ex1 ex1_sexp
          ex2 ex2_sexp ex2_1 ex2_2 ex2_3 ex2_4 ex2_5 ex2_6 ex2_st1 ex2_st2
-         let_ax get_ax set_ax seq_ax)
+         let_ax get_ax set_ax seq_ax ax4
+         lang4)
 
 (define-language L
   (e ::=
@@ -21,8 +22,10 @@
      (seq C e))
 
   (E ::= hole
-     (and E e) (and b E)
-     (or E e) (or b E)
+     (and E e)
+     (and b E)
+     (or E e)
+     (or b E)
      (not E)
      (seq E e))
 
@@ -38,6 +41,14 @@
      (set x)
      x
      (seq e e)))
+
+(define-extended-language L3 L2
+  (E ::=
+     hole
+     (and E e)
+     (or E e)
+     (not E)
+     (seq E e)))
 
 (define-judgment-form L
   #:mode (ax-->1 I O)
@@ -119,6 +130,40 @@
   [------------------ "seq"
    (ax-->2 Σ (seq b e) Σ e)])
 
+(define-judgment-form L3
+  #:mode (ax-->3 I I O O)
+  #:contract (ax-->3 Σ e Σ e)
+
+  [------------------ "andt"
+   (ax-->3 Σ (and tt e) Σ e)]
+  
+  [------------------ "andf"
+   (ax-->3 Σ (and ff e) Σ ff)]
+
+  [------------------ "ort"
+   (ax-->3 Σ (or tt e) Σ tt)]
+
+  [------------------ "orf"
+   (ax-->3 Σ (or ff e) Σ e)]
+
+  [------------------ "nott"
+   (ax-->3 Σ (not tt) Σ ff)]
+
+  [------------------ "notf"
+   (ax-->3 Σ (not ff) Σ tt)]
+
+  [------------------ "let"
+   (ax-->3 Σ (let x e) (extend Σ x ff) e)]
+
+  [------------------ "set"
+   (ax-->3 Σ (set x) (extend Σ x tt) tt)]
+
+  [------------------ "get"
+   (ax-->3 Σ x Σ (lookup Σ x))]
+
+  [------------------ "seq"
+   (ax-->3 Σ (seq b e) Σ e)])
+
 (define-judgment-form L
   #:mode (ax--> I O)
   #:contract (ax--> e e)
@@ -161,23 +206,42 @@
    (-->C* Σ_1 e_1 Σ_3 e_3)])
 
 (define-judgment-form L2
-  #:mode (-->E I I O O)
-  #:contract (-->E Σ e Σ e)
+  #:mode (-->E2 I I O O)
+  #:contract (-->E2 Σ e Σ e)
 
   [(ax-->2 Σ_1 e_1 Σ_2 e_2)
    ------
-   (-->E Σ_1 (in-hole E e_1) Σ_2 (in-hole E e_2))])
+   (-->E2 Σ_1 (in-hole E e_1) Σ_2 (in-hole E e_2))])
 
 (define-judgment-form L2
-  #:mode (-->E* I I O O)
-  #:contract (-->E* Σ e Σ e)
+  #:mode (-->E2* I I O O)
+  #:contract (-->E2* Σ e Σ e)
 
   [------
-   (-->E* Σ e Σ e)]
+   (-->E2* Σ e Σ e)]
 
-  [(-->E Σ_1 e_1 Σ_2 e_2) (-->E* Σ_2 e_2 Σ_3 e_3)
+  [(-->E2 Σ_1 e_1 Σ_2 e_2) (-->E2* Σ_2 e_2 Σ_3 e_3)
    ------
-   (-->E* Σ_1 e_1 Σ_3 e_3)])
+   (-->E2* Σ_1 e_1 Σ_3 e_3)])
+
+(define-judgment-form L3
+  #:mode (-->E3 I I O O)
+  #:contract (-->E3 Σ e Σ e)
+
+  [(ax-->3 Σ_1 e_1 Σ_2 e_2)
+   ------
+   (-->E3 Σ_1 (in-hole E e_1) Σ_2 (in-hole E e_2))])
+
+(define-judgment-form L3
+  #:mode (-->E3* I I O O)
+  #:contract (-->E3* Σ e Σ e)
+
+  [------
+   (-->E3* Σ e Σ e)]
+
+  [(-->E3 Σ_1 e_1 Σ_2 e_2) (-->E3* Σ_2 e_2 Σ_3 e_3)
+   ------
+   (-->E3* Σ_1 e_1 Σ_3 e_3)])
 
 
 (define-metafunction L2
@@ -201,8 +265,6 @@
                              (⊕ x = ff ·)
                              ff))
 
-
-
 (test-judgment-holds (-->C ·
                            (and ff tt)
                            ·
@@ -218,16 +280,32 @@
                             (⊕ x = tt ·)
                             tt))
 
-(test-judgment-holds (-->E* ·
+(test-judgment-holds (-->E2* ·
                             (let x (and x (seq (set x) tt)))
                             (⊕ x = tt ·)
                             ff))
 
-(test-equal (judgment-holds (-->E* ·
+(test-equal (judgment-holds (-->E2* ·
                                    (let x (and x (seq (set x) tt)))
                                    (⊕ x = tt ·)
                                    tt))
             #f)
+
+(test-judgment-holds (-->E3* ·
+                            (let x (and x (seq (set x) tt)))
+                            (⊕ x = ff ·)
+                            ff))
+
+;; these next two demonstrate the difference between short
+;; circuiting and not short circuiting in `and`
+(test-judgment-holds (-->E3* ·
+                            (let x (or (and x (seq (set x) tt)) x))
+                            (⊕ x = ff ·)
+                            ff))
+(test-judgment-holds (-->E2* ·
+                            (let x (or (and x (seq (set x) tt)) x))
+                            (⊕ x = tt ·)
+                            tt))
 
 (define ax1 (htl-append 100
                         (jf->pict ax-->1 #:cases '("andtt" "andtf" "andft" "andff"))
@@ -285,3 +363,10 @@
                         (jf->pict ax-->2 #:cases '("andtt" "andtf" "andft" "andff"))
                         (jf->pict ax-->2 #:cases '("ortt" "ortf" "orft" "orff"))
                         (jf->pict ax-->2 #:cases '("nott" "notf"))))
+
+
+(define ax4 (htl-append 60
+                        (jf->pict ax-->3 #:cases '("andt" "andf"))
+                        (jf->pict ax-->3 #:cases '("ort" "orf"))))
+
+(define lang4 (grammar->pict L3 #:nts '(E)))
