@@ -231,7 +231,7 @@
   (require "../models/3-bool-state-left-to-right.rkt")
   (provide ec_lang)
 
-  (define ec_lang (grammar->pict L #:nts '(E))))
+  (define ec_lang (grammar->pict L #:nts '(E v))))
 
 (module+ model4
   (require "../models/4-shortcircuiting.rkt")

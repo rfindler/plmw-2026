@@ -17,13 +17,14 @@
 
   (E ::= hole
      (and E e)
-     (and b E)
+     (and v E)
      (or E e)
-     (or b E)
+     (or v E)
      (not E)
      (seq E e))
+  (v ::= b)
 
-  (Σ ::= · (⊕ x = b Σ))
+  (Σ ::= · (⊕ x = v Σ))
   
   (x ::= variable-not-otherwise-mentioned)
   #:binding-forms
@@ -73,7 +74,7 @@
    (-->ax Σ x Σ (lookup Σ x))]
 
   [------------------ "seq"
-   (-->ax Σ (seq b e) Σ e)])
+   (-->ax Σ (seq v e) Σ e)])
 
 (define-judgment-form L
   #:mode (ax--> I O)
