@@ -1,6 +1,6 @@
 #lang racket
 (require redex/reduction-semantics)
-(provide L -->ax)
+(provide L -->ax --> -->*)
 
 (define-language L
   (e ::=

@@ -52,10 +52,14 @@
      (generic-arrow-rewrite (list e1) (list e2) "ax" #f)]
     [(list _open _--> Σ1 e1 Σ2 e2 _close)
      (generic-arrow-rewrite (list Σ1 e1) (list Σ2 e2) "ax" #f)]))
-(define (-->ax2-rewrite lws)
+(define (-->-rewrite lws)
   (match lws
     [(list _open _--> Σ1 e1 Σ2 e2 _close)
-     (generic-arrow-rewrite (list Σ1 e1) (list Σ2 e2) "ax" #f)]))
+     (generic-arrow-rewrite (list Σ1 e1) (list Σ2 e2) "" #f)]))
+(define (-->*-rewrite lws)
+  (match lws
+    [(list _open _--> Σ1 e1 Σ2 e2 _close)
+     (generic-arrow-rewrite (list Σ1 e1) (list Σ2 e2) "*" #f)]))
 
 (define (generic-arrow-rewrite before-items after-items subscript star?)
   (define before-brackets? (not (= (length before-items) 1)))
@@ -110,8 +114,8 @@
 (define (with-the-rewriters thunk)
   (with-compound-rewriters
       (['-->ax -->ax-rewrite]
-       ['ax-->2 -->ax2-rewrite]
-       ['ax-->3 -->ax2-rewrite]
+       ['--> -->-rewrite]
+       ['-->* -->*-rewrite]
        ['extend extend-rewrite]
        ['lookup lookup-rewrite]
        ['⊕ ⊕-rewrite])
@@ -231,8 +235,10 @@
 
 (module+ model4
   (require "../models/4-shortcircuiting.rkt")
-  (provide ax ec_lang)
+  (provide ax ec_lang red decomp)
   (define ec_lang (grammar->pict L #:nts '(E)))
   (define ax (list
               (jf->pict -->ax #:cases '("andt" "andf"))
-              (jf->pict -->ax #:cases '("ort" "orf")))))
+              (jf->pict -->ax #:cases '("ort" "orf"))))
+  (define red (jf->pict -->))
+  (define decomp (t->pict L (in-hole E e))))

@@ -40,7 +40,9 @@ slide(~title: tp("evaluation contexts: paths from the root to the axiom use"),
 slide(~title: tp("those rules aren’t the usual ones: can we fix them?"), ex2_with_new_rules)
 slide(t("Careful—the next slide has the answer!"))
 slide(~title: tp("we need only two evaluation contexts"), model4.ec_lang)
-
+slide(~title: tp("some notation"), stack(~sep: 100,
+                                         beside(~sep: 40, model4.decomp, abstract_big_tree(200,200,#true, ~line_width: 2).scale(2/3)),
+                                         model4.red))
 
 // add lambda. rules are easy βv or β (call by need can be done without a store!
 // c.f. ariola et al POPL 95/JFP 97 and chang/felleisen esop 2012

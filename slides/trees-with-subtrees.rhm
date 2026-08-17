@@ -9,10 +9,10 @@ export:
 fun random_step(r,biggest_random_step):
   r.random(biggest_random_step*2+1)-biggest_random_step
 
-fun abstract_big_tree(w,h, subtree):
-  def p1 = draw.Pen(~color: if subtree | "gray" | "black")
-  def p2 = draw.Pen(~color: "black")
-  def p3 = draw.Pen(~color: "red")
+fun abstract_big_tree(w,h, subtree, ~line_width: line_width = 1):
+  def p1 = draw.Pen(~color: if subtree | "gray" | "black", ~width: line_width)
+  def p2 = draw.Pen(~color: "black", ~width: line_width)
+  def p3 = draw.Pen(~color: "red", ~width: line_width)
   dc(fun (dc :: draw.DC, dx, dy):
        def r1 = random.Random(Array(1,11,0,1,2,0))
        def r2 = random.Random(Array(1,1,1,1,2,1))
