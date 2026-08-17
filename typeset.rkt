@@ -1,8 +1,8 @@
 #lang racket
 (require racket/gui/base redex/pict pict)
-(provide jf->pict grammar->pict t->pict str_to_tt)
+(provide jf->pict grammar->pict t->pict str_to_tt libertine font_size)
 
-(define font-size 32)
+(define font_size 32)
 
 (define-syntax-rule
   (define-font id name)
@@ -113,9 +113,9 @@
        ['extend extend-rewrite]
        ['lookup lookup-rewrite]
        ['⊕ ⊕-rewrite])
-    (parameterize ([label-font-size font-size]
-                   [default-font-size font-size]
-                   [metafunction-font-size font-size]
+    (parameterize ([label-font-size font_size]
+                   [default-font-size font_size]
+                   [metafunction-font-size font_size]
                    [label-style body-text-style]
                    [grammar-style body-text-style]
                    [paren-style tt-text-style]

@@ -5,6 +5,8 @@ import:
   "sexp_to_tree.rhm" open
   "trees-with-subtrees.rhm" open
   "explain-evaluation-contexts.rhm" open
+  "typeset.rkt"
+  draw
   slideshow open
 
 // introduction:
@@ -14,22 +16,28 @@ import:
 // mathematically: we are defining a relation that captures a single step of computation
 //  and then just taking the trans refl closure to get the complete behavior of a program.
 
-slide(lang1) // a first simple language: booleans
-slide(ax1)   // define rules for atomic computation steps: the axioms
-slide(ex1)   // what should happen when an axiom is nested: is that always ok?
-slide(lang2) // to answer, let’s first add state to the language
-slide(ax2)   // the state axioms; also add a store
-slide(ax3)   // the other axioms have to adapt
-slide(ex2_slide) // let’s return to the question of nesting, but in this example
-slide(stack.left(~sep: 80,
+fun tp(x):
+  t(x, ~font: draw.Font(~name: typeset.libertine, ~size: typeset.font_size)).colorize("brown")
+
+slide(~title: tp("a first simple language: booleans"), lang1)
+slide(~title: tp("axioms: rules for atomic computation steps"), ax1)
+slide(~title: tp("what should happen when an axiom is nested: is that always ok? (no!)"), ex1)
+slide(~title: tp("to see why, let’s first add state to the language"), lang2)
+slide(~title: tp("the state axioms; also add a store"), ax2)
+slide(~title: tp("the other axioms have to adapt"), ax3)
+slide(~title: tp("let’s return to the question of nesting, but in a new example"), ex2_slide)
+slide(~title: tp("expressions are really trees"),
+      stack.left(~sep: 80,
                  beside(~sep: 100, ex1 , to_pict(ex1_sexp)),
-                 beside(~sep: 100, ex2 , to_pict(ex2_sexp)))) // expressions are really trees
-slide(switch(abstract_big_tree(200,200,#false),
-             abstract_big_tree(200,200,#true)).scale(2))  // maybe big ones; how do we express the rule?
-slide(explain_evaluation_contexts) // evaluation contexts: paths from the root to the axiom use
-slide(ex2_with_new_rules)  // those rules aren’t the usual ones: can we fix them?
+                 beside(~sep: 100, ex2 , to_pict(ex2_sexp))))
+slide(~title: tp("maybe big trees; we need to describe paths"),
+      switch(abstract_big_tree(200,200,#false),
+             abstract_big_tree(200,200,#true)).scale(2))
+slide(~title: tp("evaluation contexts: paths from the root to the axiom use"),
+      explain_evaluation_contexts)
+slide(~title: tp("those rules aren’t the usual ones: can we fix them?"), ex2_with_new_rules)
 slide(t("Careful—the next slide has the answer!"))
-slide(lang4) // we need only two evaluation contexts
+slide(~title: tp("we need only two evaluation contexts"), lang4)
 
 
 // add lambda. rules are easy βv or β (call by need can be done without a store!
