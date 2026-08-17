@@ -46,10 +46,12 @@
 (define (⟨-pict) (mtext "⟨"))
 (define the-arrow #;"→" "⟶")
 
-(define (-->ax1-rewrite lws)
+(define (-->ax-rewrite lws)
   (match lws
     [(list _open _--> e1 e2 _close)
-     (generic-arrow-rewrite (list e1) (list e2) "ax" #f)]))
+     (generic-arrow-rewrite (list e1) (list e2) "ax" #f)]
+    [(list _open _--> Σ1 e1 Σ2 e2 _close)
+     (generic-arrow-rewrite (list Σ1 e1) (list Σ2 e2) "ax" #f)]))
 (define (-->ax2-rewrite lws)
   (match lws
     [(list _open _--> Σ1 e1 Σ2 e2 _close)
@@ -107,7 +109,7 @@
 
 (define (with-the-rewriters thunk)
   (with-compound-rewriters
-      (['ax-->1 -->ax1-rewrite]
+      (['-->ax -->ax-rewrite]
        ['ax-->2 -->ax2-rewrite]
        ['ax-->3 -->ax2-rewrite]
        ['extend extend-rewrite]
@@ -150,3 +152,87 @@
   (with-the-rewriters
       (λ ()
         (text str (literal-style) (default-font-size)))))
+
+(module+ model1
+  (require "../models/1-bool-everywhere.rkt")
+  (provide lang ax ex ex_sexp)
+  (define lang (grammar->pict L #:nts '(e b)))
+  (define ax
+    (list (jf->pict -->ax #:cases '("andtt" "andtf" "andft" "andff"))
+          (jf->pict -->ax #:cases '("ortt" "ortf" "orft" "orff"))
+          (jf->pict -->ax #:cases '("nott" "notf"))))
+  (define ex_sexp
+    '(or (and tt ff)
+         tt))
+  (define ex
+    (t->pict L (or (and tt ff)
+                   tt))))
+
+(module+ model2
+  (require "../models/2-bool-state-everywhere.rkt")
+  (provide lang schema new_ax bool_ax
+           ex ex_sexp
+           ex_st1 ex_st2
+           ex_1 ex_2 ex_3 ex_4 ex_5 ex_6
+           let_ax set_ax get_ax seq_ax)
+  (define lang (grammar->pict L #:nts '(e b)))
+  (define schema
+    (frame (inset (vr-append
+                   (t->pict L (-->ax Σ e Σ e))
+                   (hbl-append 6
+                               (t->pict L Σ)
+                               (t->pict L ∈)
+                               (t->pict L x)
+                               (lift-above-baseline (t->pict L ⇴) 2)
+                               (t->pict L b)))
+                  10)))
+  (define new_ax (jf->pict -->ax #:cases '("let" "set" "get" "seq")))
+  (define bool_ax
+    (list (jf->pict -->ax #:cases '("andtt" "andtf" "andft" "andff"))
+          (jf->pict -->ax #:cases '("ortt" "ortf" "orft" "orff"))
+          (jf->pict -->ax #:cases '("nott" "notf"))))
+
+  (define let_ax (jf->pict -->ax #:cases '("let")))
+  (define set_ax (jf->pict -->ax #:cases '("set")))
+  (define get_ax (jf->pict -->ax #:cases '("get")))
+  (define seq_ax (jf->pict -->ax #:cases '("seq")))
+
+  (define ex_sexp
+    '(let x
+       (and x
+            (seq (set x)
+                 tt))))
+  (define ex (t->pict L (let x
+                           (and x
+                                (seq (set x)
+                                     tt)))))
+  (define ex_1 (t->pict L (and x
+                                (seq (set x)
+                                     tt))))
+  (define ex_2 (t->pict L (and ff
+                                (seq (set x)
+                                     tt))))
+  (define ex_3 (t->pict L ff))
+  (define ex_4 (t->pict L (and x
+                                (seq tt
+                                     tt))))
+  (define ex_5 (t->pict L (and x
+                                tt)))
+  (define ex_6 (t->pict L tt))
+
+  (define ex_st1 (t->pict L (⊕ x = ff ·)))
+  (define ex_st2 (t->pict L (⊕ x = tt ·))))
+
+(module+ model3
+  (require "../models/3-bool-state-left-to-right.rkt")
+  (provide ec_lang)
+
+  (define ec_lang (grammar->pict L #:nts '(E))))
+
+(module+ model4
+  (require "../models/4-shortcircuiting.rkt")
+  (provide ax ec_lang)
+  (define ec_lang (grammar->pict L #:nts '(E)))
+  (define ax (list
+              (jf->pict -->ax #:cases '("andt" "andf"))
+              (jf->pict -->ax #:cases '("ort" "orf")))))

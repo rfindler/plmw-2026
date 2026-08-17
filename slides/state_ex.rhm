@@ -1,22 +1,22 @@
 #lang rhombus
 import:
-  "model-picts.rhm" open
+  "typeset.rkt" ! model2
   slideshow open
 
 export:
   ex2_slide
 
-def between_steps = 40
+def between_steps = 30
 
-def troublesome_step = stack.left(ex2_st1, ex2_1)
+def troublesome_step = stack.left(model2.ex_st1, model2.ex_1)
 
 def ex2_slide = stack(
   ~sep: 60,
   beside.topline(~sep: between_steps,
-                 ex2,
+                 model2.ex,
                  t("→").time_pad(~before: 1),
                  stack.left(beside.topline(~sep: between_steps,
-                                           stack.center(overlay(rectangle(~around: troublesome_step.ghost().pad(~horiz: 40,~vert: 10),
+                                           stack.center(overlay(rectangle(~around: troublesome_step.ghost().pad(~horiz: 30,~vert: 10),
                                                                           ~line: #false,
                                                                           ~fill: "pink",
                                                                           ~rounded: #'default,
@@ -24,14 +24,20 @@ def ex2_slide = stack(
                                                                 troublesome_step),
                                                         t("↓").time_pad(~before: 3)),
                                            t("→").time_pad(~before: 1),
-                                           stack.left(ex2_st1, ex2_2).time_pad(~before: 1),
+                                           stack.left(model2.ex_st1, model2.ex_2).time_pad(~before: 1),
                                            t("→*").time_pad(~before: 2),
-                                           stack.left(ex2_st1, ex2_3).time_pad(~before: 2)).time_pad(~before: 1),
+                                           stack.left(model2.ex_st1, model2.ex_3).time_pad(~before: 2)).time_pad(~before: 1),
                             beside.topline(~sep: between_steps,
-                                           stack.left(ex2_st2, ex2_4),
+                                           stack.left(model2.ex_st2, model2.ex_4),
                                            t("→*").time_pad(~before: 1),
-                                           stack.left(ex2_st2, ex2_6).time_pad(~before: 1)).time_pad(~before: 4))),
-  overlay(switch(seq_ax.ghost(),let_ax,get_ax,seq_ax.ghost(), set_ax, seq_ax.ghost(), beside(~sep: 100, get_ax,set_ax)))
+                                           stack.left(model2.ex_st2, model2.ex_6).time_pad(~before: 1)).time_pad(~before: 4))),
+  overlay(switch(model2.seq_ax.ghost(),
+                 model2.let_ax,
+                 model2.get_ax,
+                 model2.seq_ax.ghost(),
+                 model2.set_ax,
+                 model2.seq_ax.ghost(),
+                 beside(~sep: 100, model2.get_ax, model2.set_ax)))
   )
 
 module main:

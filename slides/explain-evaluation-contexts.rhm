@@ -1,6 +1,8 @@
 #lang rhombus
 import:
-  "model-picts.rhm" open
+  "typeset.rkt" ! model2
+  "typeset.rkt" ! model3
+  "typeset.rkt" ! model4
   slideshow open
 
 export:
@@ -9,19 +11,19 @@ export:
 
 def first_term = stack.left(
   ~sep: 40,
-  ex2,
-  let_ax
+  model2.ex,
+  model2.let_ax
   )
 
 def second_term = stack.left(
   ~sep: 40,
-  ex2_1,
-  get_ax,
-  set_ax
+  model2.ex_1,
+  model2.get_ax,
+  model2.set_ax
   )
 
 def explain_evaluation_contexts:
-  beside(lang3,
+  beside(model3.ec_lang,
          beside(animate(fun (n): blank(~width: n*100, ~height: 0)),
                 switch(animate(~extent: 1,
                                fun (n):
@@ -29,11 +31,11 @@ def explain_evaluation_contexts:
                        second_term.pad(~right: first_term.width - second_term.width))))
 
 def new_rules:
-  ax4
+  beside.topline(& model4.ax)
 
 
 def ex2_with_new_rules:
-  stack(ex2,
+  stack(model2.ex,
         animate(fun (n): blank(~height: n*40, ~width: 0)),
         animate(fun (n):
                   new_rules.pad(~bottom: -(1-n)*new_rules.height).clip()).sustain())
