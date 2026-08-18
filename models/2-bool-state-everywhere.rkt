@@ -74,44 +74,22 @@
    (-->ax Σ (seq b e) Σ e)])
 
 (define-judgment-form L
-  #:mode (ax--> I O)
-  #:contract (ax--> e e)
-
-  [------------------
-   (ax--> (and tt e) e)]
-
-  [------------------
-   (ax--> (and ff e) ff)]
-
-  [------------------
-   (ax--> (or tt e) tt)]
-
-  [------------------
-   (ax--> (or ff e) e)]
-
-  [------------------
-   (ax--> (not ff) tt)]
-
-  [------------------
-   (ax--> (not tt) ff)])
-
-(define-judgment-form L
   #:mode (--> I I O O)
   #:contract (--> Σ e Σ e)
 
   [(-->ax Σ_1 e_1 Σ_2 e_2)
-   ------
+   ------ "ax"
    (--> Σ_1 (in-hole C e_1) Σ_2 (in-hole C e_2))])
 
 (define-judgment-form L
   #:mode (-->* I I O O)
   #:contract (-->* Σ e Σ e)
 
-  [------
+  [------ "refl"
    (-->* Σ e Σ e)]
 
   [(--> Σ_1 e_1 Σ_2 e_2) (-->* Σ_2 e_2 Σ_3 e_3)
-   ------
+   ------ "step"
    (-->* Σ_1 e_1 Σ_3 e_3)])
 
 (define-metafunction L

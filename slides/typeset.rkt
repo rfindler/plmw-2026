@@ -104,6 +104,10 @@
         b
         " }"))
 
+(define (substitute-rewrite lws)
+  (match-define (list _open _substitute e x v _close) lws)
+  (list "" e "{" x " := " v "}"))
+
 (define (lookup-rewrite lws)
   (list ""
         (list-ref lws 2)
@@ -118,6 +122,7 @@
        ['-->* -->*-rewrite]
        ['extend extend-rewrite]
        ['lookup lookup-rewrite]
+       ['substitute substitute-rewrite]
        ['⊕ ⊕-rewrite])
     (parameterize ([label-font-size font_size]
                    [default-font-size font_size]
@@ -242,3 +247,12 @@
               (jf->pict -->ax #:cases '("ort" "orf"))))
   (define red (jf->pict -->))
   (define decomp (t->pict L (in-hole E e))))
+
+(module+ model5
+  (require (prefix-in cbv: "../models/5-cbv.rkt")
+           (prefix-in cbn: "../models/5-cbn.rkt"))
+  (provide ax_cbv ec_cbv ax_cbn ec_cbn)
+  (define ax_cbv (jf->pict cbv:-->ax))
+  (define ec_cbv (grammar->pict cbv:L #:nts '(E v)))
+  (define ax_cbn (jf->pict cbn:-->ax))
+  (define ec_cbn (grammar->pict cbn:L #:nts '(E v))))
