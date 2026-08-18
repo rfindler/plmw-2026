@@ -115,11 +115,23 @@
         (list-ref lws 3)
         ")"))
 
+(define (no-catch-rewrite lws)
+  (match-define (list _open _no-catch E _close) lws)
+  (list (hbl-append (mtext "∀ E. (")
+                    (dtext "catch")
+                    (mtext " ")
+                    (mtext "E")
+                    (mtext ")")
+                    (mtext " ∉ "))
+        E
+        ""))
+
 (define (with-the-rewriters thunk)
   (with-compound-rewriters
       (['-->ax -->ax-rewrite]
        ['--> -->-rewrite]
        ['-->* -->*-rewrite]
+       ['no-catch no-catch-rewrite]
        ['extend extend-rewrite]
        ['lookup lookup-rewrite]
        ['substitute substitute-rewrite]
@@ -256,3 +268,12 @@
   (define ec_cbv (grammar->pict cbv:L #:nts '(E v)))
   (define ax_cbn (jf->pict cbn:-->ax))
   (define ec_cbn (grammar->pict cbn:L #:nts '(E v))))
+
+(module+ model6
+  (require "../models/6-exn.rkt")
+  (provide red lang_e lang_ec)
+  (define lang_e (grammar->pict L #:nts '(e)))
+  (define lang_ec (grammar->pict L #:nts '(E)))
+  (define red (list (jf->pict --> #:cases '("ax"))
+                    (jf->pict --> #:cases '("throw"))
+                    (jf->pict --> #:cases '("catch")))))

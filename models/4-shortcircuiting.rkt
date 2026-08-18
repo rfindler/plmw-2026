@@ -39,10 +39,10 @@
    (-->ax Σ (and ff e) Σ ff)]
 
   [------------------ "ort"
-   (-->ax Σ (or tt e) Σ e)]
+   (-->ax Σ (or tt e) Σ tt)]
 
   [------------------ "orf"
-   (-->ax Σ (or ff e) Σ ff)]
+   (-->ax Σ (or ff e) Σ e)]
 
   [------------------ "nott"
    (-->ax Σ (not tt) Σ ff)]
@@ -106,6 +106,16 @@
                            (let x (and x (seq (set x) tt)))
                            (⊕ x = ff ·)
                            ff))
+
+(test-judgment-holds (-->* ·
+                           (or ff tt)
+                           ·
+                           tt))
+
+(test-judgment-holds (-->* ·
+                           (or tt ff)
+                           ·
+                           tt))
 
 (test-equal (judgment-holds (-->* ·
                                   (let x (and x (seq (set x) tt)))

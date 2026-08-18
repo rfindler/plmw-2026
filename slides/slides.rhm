@@ -9,6 +9,7 @@ import:
   "typeset.rkt" ! model2
   "typeset.rkt" ! model4
   "typeset.rkt" ! model5
+  "typeset.rkt" ! model6
   draw
   slideshow open
 
@@ -44,11 +45,15 @@ slide(~title: tp("we need only two evaluation contexts"), model4.ec_lang)
 slide(~title: tp("some notation"), stack(~sep: 100,
                                          beside(~sep: 40, model4.decomp, abstract_big_tree(200,200,#true, ~line_width: 2).scale(2/3)),
                                          model4.red))
-slide(~title: tp("the λ calculus"),
+slide(~title: tp("functions"),
       beside.baseline(~sep: 200,
                       stack(~sep: 40, model5.ec_cbv, model5.ax_cbv),
                       stack(~sep: 40, model5.ec_cbn, model5.ax_cbn)))
-      
+slide(~title: tp("exceptions"),
+      stack(~sep: 60,
+            beside.topline(~sep: 100, model6.lang_e, model6.lang_ec),
+            stack.center(~sep: 60, & model6.red)))
+
 
 // add lambda. rules are easy βv or β (call by need can be done without a store!
 // c.f. ariola et al POPL 95/JFP 97 and chang/felleisen esop 2012
