@@ -12,10 +12,10 @@
   (E ::=
      ....
      (E e))
-  (v ::= 
+  (v ::=
      ....
      (λ x e))
-  
+
   #:binding-forms
   (let x e)
   (λ x e))
@@ -28,7 +28,7 @@
    (-->ax Σ ((λ x e_1) e_2)
           Σ (substitute e_1 x e_2))])
 
-(define-judgment-form L
+(define-overriding-judgment-form L 4:-->
   #:mode (--> I I O O)
   #:contract (--> Σ e Σ e)
 
