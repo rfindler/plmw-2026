@@ -277,3 +277,11 @@
   (define red (list (jf->pict --> #:cases '("ax"))
                     (jf->pict --> #:cases '("throw"))
                     (jf->pict --> #:cases '("catch")))))
+
+(module+ model7
+  (require "../models/7-cont.rkt")
+  (provide red lang_e lang_ec)
+  (define lang_e (grammar->pict L #:nts '(e)))
+  (define lang_ec (grammar->pict L #:nts '(E)))
+  (define red (list (jf->pict --> #:cases '("call/cc"))
+                    (jf->pict --> #:cases '("abort")))))
