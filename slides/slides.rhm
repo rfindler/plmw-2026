@@ -23,7 +23,10 @@ import:
 //  and then just taking the trans refl closure to get the complete behavior of a program.
 
 fun tp(x):
-  t(x, ~font: draw.Font(~name: typeset.libertine, ~size: typeset.font_size)).colorize("brown")
+  def margin = 20
+  def main = t(x, ~font: draw.Font(~name: typeset.libertine, ~size: typeset.font_size)).colorize("white")
+  overlay(rectangle(~fill: draw.Color(78, 42, 132), ~width: blank_client().width+margin*2, ~height: main.height+60),
+          main).pad(- margin)
 
 slide(~title: tp("a first simple language: booleans"), model1.lang)
 slide(~title: tp("axioms: rules for atomic computation steps"), beside.topline(~sep: 100, & model1.ax))
