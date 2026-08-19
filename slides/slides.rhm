@@ -11,6 +11,7 @@ import:
   "typeset.rkt" ! model5
   "typeset.rkt" ! model6
   "typeset.rkt" ! model7
+  "typeset.rkt" ! model8
   draw
   slideshow open
 
@@ -58,6 +59,10 @@ slide(~title: tp("continuations"),
       stack(~sep: 60,
             beside.topline(~sep: 100, model7.lang_e, model7.lang_ec),
             stack.center(~sep: 60, & model7.red)))
+slide(~title: tp("par"),
+      stack(~sep: 60,
+            beside.topline(~sep: 100, model8.lang_e, model8.lang_ec),
+            stack.center(~sep: 60, model8.red)))
 
 
 // add lambda. rules are easy βv or β (call by need can be done without a store!

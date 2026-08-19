@@ -285,3 +285,10 @@
   (define lang_ec (grammar->pict L #:nts '(E)))
   (define red (list (jf->pict --> #:cases '("call/cc"))
                     (jf->pict --> #:cases '("abort")))))
+
+(module+ model8
+  (require "../models/8-par.rkt")
+  (provide red lang_e lang_ec)
+  (define lang_e (grammar->pict L #:nts '(e)))
+  (define lang_ec (grammar->pict L #:nts '(E)))
+  (define red (jf->pict -->ax #:cases '("par"))))
