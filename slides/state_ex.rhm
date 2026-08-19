@@ -6,31 +6,35 @@ import:
 export:
   ex2_slide
 
-def between_steps = 30
+def between_steps = 0
+def right_arrow = t("→").pad(~right: 12)
+def right_arrow_star = t("→*").pad(~right: 12)
 
 def troublesome_step = stack.left(model2.ex_st1, model2.ex_1)
 
 def ex2_slide = stack(
   ~sep: 60,
-  beside.topline(~sep: between_steps,
-                 model2.ex,
-                 t("→").time_pad(~before: 1),
-                 stack.left(beside.topline(~sep: between_steps,
-                                           stack.center(overlay(rectangle(~around: troublesome_step.ghost().pad(~horiz: 30,~vert: 10),
-                                                                          ~line: #false,
-                                                                          ~fill: "pink",
-                                                                          ~rounded: #'default,
-                                                                          ~refocus: troublesome_step).time_pad(~before: 5),
-                                                                troublesome_step),
-                                                        t("↓").time_pad(~before: 3)),
-                                           t("→").time_pad(~before: 1),
-                                           stack.left(model2.ex_st1, model2.ex_2).time_pad(~before: 1),
-                                           t("→*").time_pad(~before: 2),
-                                           stack.left(model2.ex_st1, model2.ex_3).time_pad(~before: 2)).time_pad(~before: 1),
-                            beside.topline(~sep: between_steps,
-                                           stack.left(model2.ex_st2, model2.ex_4),
-                                           t("→*").time_pad(~before: 1),
-                                           stack.left(model2.ex_st2, model2.ex_6).time_pad(~before: 1)).time_pad(~before: 4))),
+  beside(~sep: between_steps,
+         ~order: #'back,
+         ~vert: #'topline,
+         model2.ex,
+         right_arrow.time_pad(~before: 1),
+         stack.left(beside.topline(~sep: between_steps,
+                                   stack.center(overlay(rectangle(~around: troublesome_step.ghost().pad(~horiz: 30,~vert: 10),
+                                                                  ~line: #false,
+                                                                  ~fill: "pink",
+                                                                  ~rounded: #'default,
+                                                                  ~refocus: troublesome_step).time_pad(~before: 5),
+                                                        troublesome_step),
+                                                t("↓").time_pad(~before: 3)),
+                                   right_arrow.time_pad(~before: 1),
+                                   stack.left(model2.ex_st1, model2.ex_2).time_pad(~before: 1),
+                                   right_arrow_star.time_pad(~before: 2),
+                                   stack.left(model2.ex_st1, model2.ex_3).time_pad(~before: 2)).time_pad(~before: 1),
+                    beside.topline(~sep: between_steps,
+                                   stack.left(model2.ex_st2, model2.ex_4),
+                                   right_arrow_star.time_pad(~before: 1),
+                                   stack.left(model2.ex_st2, model2.ex_6).time_pad(~before: 1)).time_pad(~before: 4))),
   overlay(switch(model2.seq_ax.ghost(),
                  model2.let_ax,
                  model2.get_ax,

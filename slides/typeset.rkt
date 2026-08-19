@@ -15,7 +15,7 @@
 (define-font libertine "Caladea" #; "Baskerville" #;"Linux Libertine O")
 (define-font inconsolata '"Courier Prime" #;"Inconsolata")
 
-(define body-text-style libertine)
+(define body-text-style inconsolata)
 (define tt-text-style inconsolata)
 
 (define (dtext str #:subscript? [subscript? #f])
@@ -98,11 +98,11 @@
   (unless (and (lw? Σ)
                (equal? (lw-e Σ) '·))
     (error '⊕-rewrite "cannot rewrite bigger stores"))
-  (list "{ "
+  (list "{"
         x
-        " = "
+        "="
         b
-        " }"))
+        "}"))
 
 (define (substitute-rewrite lws)
   (match-define (list _open _substitute e x v _close) lws)
@@ -224,21 +224,21 @@
             (seq (set x)
                  tt))))
   (define ex (t->pict L (let x
-                           (and x
-                                (seq (set x)
-                                     tt)))))
+                          (and x
+                               (seq (set x)
+                                    tt)))))
   (define ex_1 (t->pict L (and x
-                                (seq (set x)
-                                     tt))))
+                               (seq (set x)
+                                    tt))))
   (define ex_2 (t->pict L (and ff
-                                (seq (set x)
-                                     tt))))
+                               (seq (set x)
+                                    tt))))
   (define ex_3 (t->pict L ff))
   (define ex_4 (t->pict L (and x
-                                (seq tt
-                                     tt))))
+                               (seq tt
+                                    tt))))
   (define ex_5 (t->pict L (and x
-                                tt)))
+                               tt)))
   (define ex_6 (t->pict L tt))
 
   (define ex_st1 (t->pict L (⊕ x = ff ·)))
