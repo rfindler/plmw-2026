@@ -12,21 +12,44 @@ import:
   "typeset.rkt" ! model6
   "typeset.rkt" ! model7
   "typeset.rkt" ! model8
+  "../../logo/lockup.rhm"
   draw
   slideshow open
 
-// introduction:
-// specification of a programming language starts with a description of its semantics
-// but we can actually do the semantics that way too!
-// you are familiar with this from grade school: "plug and chug" and simplification of arithmetic.
-// mathematically: we are defining a relation that captures a single step of computation
-//  and then just taking the trans refl closure to get the complete behavior of a program.
+current_font(draw.Font(~name: typeset.libertine, ~size: typeset.font_size))
 
 fun tp(x):
   def margin = 20
-  def main = t(x, ~font: draw.Font(~name: typeset.libertine, ~size: typeset.font_size)).colorize("white")
+  def main = t(x).colorize("white")
   overlay(rectangle(~fill: draw.Color(78, 42, 132), ~width: blank_client().width+margin*2, ~height: main.height+60),
           main).pad(- margin)
+
+slide(
+  stack(
+    ~sep: 140,
+    tp(stack(
+         ~horiz: #'left,
+         @t{Reduction Semantics &},
+         @t{How to Read Them},
+       ).pad(~vert: 10).scale(3)),
+    lockup.horizontal_purple()
+  )
+)
+
+slide(
+  ~title: tp("reduction semantics"),
+  stack.right(
+    ~sep:60,
+    t("specification of a PL: start with syntax"),
+    beside.topline(t("the "),
+                   t(~font: current_font() with (weight = #'bold), "semantics"),
+                   t(" also works via the syntax")),
+    stack.right(t("basics are the same as grade-school math:"),
+                t("plug and chug")),
+    stack.right(t("formally, a binary relation on syntax"),
+                t("that captures steps of computation"))
+  )
+)
 
 slide(~title: tp("a first simple language: booleans"), model1.lang)
 slide(~title: tp("axioms: rules for atomic computation steps"), beside.topline(~sep: 100, & model1.ax))

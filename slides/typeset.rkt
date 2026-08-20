@@ -206,7 +206,7 @@
                                (t->pict L x)
                                (lift-above-baseline (t->pict L ⇴) 2)
                                (t->pict L b)))
-                  10)))
+                  20 10)))
   (define new_ax (jf->pict -->ax #:cases '("let" "set" "get" "seq")))
   (define bool_ax
     (list (jf->pict -->ax #:cases '("andtt" "andtf" "andft" "andff"))
