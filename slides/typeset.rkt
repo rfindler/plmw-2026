@@ -104,6 +104,16 @@
         b
         "}"))
 
+(define (∉Can⊥-rewrite lws)
+  (match-define (list _open _∉ x Σ e _close) lws)
+  (list ""
+        x
+        " ∉ Can⊥("
+        Σ
+        " , "
+        e
+        ")"))
+
 (define (substitute-rewrite lws)
   (match-define (list _open _substitute e x v _close) lws)
   (list "" e "{" x " := " v "}"))
@@ -114,6 +124,13 @@
         "("
         (list-ref lws 3)
         ")"))
+
+(define (lookup-⊥-rewrite lws)
+  (list ""
+        (list-ref lws 2)
+        "("
+        (list-ref lws 3)
+        ") = ⊥"))
 
 (define (no-catch-rewrite lws)
   (match-define (list _open _no-catch E _close) lws)
@@ -135,6 +152,8 @@
        ['extend extend-rewrite]
        ['lookup lookup-rewrite]
        ['substitute substitute-rewrite]
+       ['lookup-⊥ lookup-⊥-rewrite]
+       ['∉Can⊥ ∉Can⊥-rewrite]
        ['⊕ ⊕-rewrite])
     (parameterize ([label-font-size font_size]
                    [default-font-size font_size]
@@ -349,3 +368,13 @@
      p))
   (define (step t)
     (apply-reduction-relation -->traces t)))
+
+(module+ model9
+  (require "../models/9-esterel.rkt")
+  (provide red)
+  (define red
+    (list (jf->pict -->ax #:cases '("let"))
+          (jf->pict -->ax #:cases '("set"))
+          (jf->pict -->ax #:cases '("get"))
+          (jf->pict --> #:cases '("cannot"))
+          )))

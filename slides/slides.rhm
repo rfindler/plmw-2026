@@ -14,6 +14,7 @@ import:
   "typeset.rkt" ! model6
   "typeset.rkt" ! model7
   "typeset.rkt" ! model8
+  "typeset.rkt" ! model9
   "lib.rhm" open
   "../../logo/lockup.rhm"
   "trace.rhm" open
@@ -28,7 +29,6 @@ slide(
              ).pad(~vert: 10).scale(3)),
   lockup.horizontal_purple().pad(~top: 140)
 )
-
 
 slide(
   ~title: tp("reduction semantics"),
@@ -90,16 +90,14 @@ slide(~title: tp("sequentially consistent parallelism, no axioms required"),
              overlay.top_right(model8.lang_ec,
                                step_through_an_example(model8.ex_and_store_sexp))))
 
-
-// add lambda. rules are easy βv or β (call by need can be done without a store!
-// c.f. ariola et al POPL 95/JFP 97 and chang/felleisen esop 2012
-
-// evaluation contexts are "everything else in the computation" so we can do exceptions
-
-// also: continuations!
-
-// ambiguity in definition: we can model the non-determinism in concurrency with `par` (this is sequential consistency)
-
-// even better: Esterel has concurrency but is also deterministic! we can do that too.
-
-// conclude:  ??
+slide(~title: tp("a taste of esterel: parallelism and determinism"),
+      stack(~sep: 60,
+            & model9.red))
+      
+slide(
+  ~title: tp("reduction semantics"),
+  stack(
+    ~sep:60,
+    t("semantics via syntax"),
+    t("give redex a try?"))
+)
