@@ -21,6 +21,7 @@ import:
   draw
   slideshow open
 
+
 slide(
   ~title: tp(stack(
                ~horiz: #'left,
@@ -84,7 +85,7 @@ slide(~title: tp("continuations"),
       stack(~sep: 60,
             beside.topline(~sep: 100, model7.lang_e, model7.lang_ec),
             stack.center(~sep: 60, & model7.red)))
-slide(~title: tp("sequentially consistent parallelism, no axioms required"),
+slide(~title: tp("sequentially consistent parallelism (no new axioms required)"),
       switch(stack(~sep: 100,
                    beside.topline(~sep: 100, model8.lang_e, model8.lang_ec)),
              overlay.top_right(model8.lang_ec,
@@ -99,5 +100,7 @@ slide(
   stack(
     ~sep:60,
     t("semantics via syntax"),
-    t("give redex a try?"))
+    t("evaluation contexts"),
+    stack(beside.baseline(t(~font: current_font() with (weight = #'bold), "redex: "), t("a PL for writing semantics:")),
+          t("http://www.github.com/rfindler/plmw-2026/")))
 )

@@ -167,7 +167,8 @@
                    [default-style body-text-style]
                    [non-terminal-subscript-style (cons 'subscript body-text-style)]
                    [non-terminal-superscript-style (cons 'superscript body-text-style)]
-                   [judgment-form-no-bar-when-no-premises #t])
+                   [judgment-form-no-bar-when-no-premises #t]
+                   [premise-spacing 100])
       (thunk))))
 
 (define (jf->pict jf #:cases [cases #f])
