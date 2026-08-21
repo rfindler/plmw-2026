@@ -1,5 +1,5 @@
 #lang racket
-(require racket/gui/base redex/pict pict)
+(require racket/gui/base redex/pict pict redex/reduction-semantics)
 (provide jf->pict grammar->pict t->pict str_to_tt libertine font_size)
 
 (define font_size 32)
@@ -176,18 +176,36 @@
 
 (module+ model1
   (require "../models/1-bool-everywhere.rkt")
-  (provide lang ax ex ex_sexp)
+  (provide lang ax ex ex_sexp ex_ctxt example_used_axiom)
   (define lang (grammar->pict L #:nts '(e b)))
   (define ax
     (list (jf->pict -->ax #:cases '("andtt" "andtf" "andft" "andff"))
           (jf->pict -->ax #:cases '("ortt" "ortf" "orft" "orff"))
           (jf->pict -->ax #:cases '("nott" "notf"))))
-  (define ex_sexp
-    '(or (and tt ff)
-         tt))
-  (define ex
-    (t->pict L (or (and tt ff)
-                   tt))))
+
+  (define example_used_axiom
+    (jf->pict -->ax #:cases '("andtf")))
+
+  (define-values (ex ex_sexp)
+    (pict-and-sexp
+     L
+     (or (and tt ff)
+         tt)))
+
+  (define-values (ex_ctxt ex_ctxt_sexp)
+    (pict-and-sexp
+     L
+     (or hole
+         tt)))
+
+  (unless (equal? (plug ex_ctxt_sexp (term (and tt ff)))
+                  ex_sexp)
+    (error 'didnt-plug.model1)))
+
+(define-syntax-rule
+  (pict-and-sexp L e)
+  (values (t->pict L e)
+          (term e)))
 
 (module+ model2
   (require "../models/2-bool-state-everywhere.rkt")
@@ -195,7 +213,8 @@
            ex ex_sexp
            ex_st1 ex_st2
            ex_1 ex_2 ex_3 ex_4 ex_5 ex_6
-           let_ax set_ax get_ax seq_ax)
+           let_ax set_ax get_ax seq_ax
+           ex_ctxt)
   (define lang (grammar->pict L #:nts '(e b)))
   (define schema
     (frame (inset (vr-append
@@ -218,18 +237,32 @@
   (define get_ax (jf->pict -->ax #:cases '("get")))
   (define seq_ax (jf->pict -->ax #:cases '("seq")))
 
-  (define ex_sexp
-    '(let x
+  (define-values (ex ex_sexp)
+    (pict-and-sexp
+     L
+     (let x
        (and x
             (seq (set x)
-                 tt))))
-  (define ex (t->pict L (let x
-                          (and x
-                               (seq (set x)
-                                    tt)))))
-  (define ex_1 (t->pict L (and x
-                               (seq (set x)
-                                    tt))))
+                 tt)))))
+  
+  (define-values (ex_1 ex_1_sexp)
+    (pict-and-sexp L (and x
+                          (seq (set x)
+                               tt))))
+
+  (define-values (ex_ctxt ex_ctxt_sexp)
+    (pict-and-sexp
+     L
+     (and hole
+          (seq (set x)
+               tt))))
+
+  (unless (equal? (plug ex_ctxt_sexp (term x))
+                  ex_1_sexp)
+    (error 'didnt-plug.model2 "\n  ~s\n  ~s"
+           (plug ex_ctxt_sexp (term x))
+           ex_1_sexp))
+
   (define ex_2 (t->pict L (and ff
                                (seq (set x)
                                     tt))))
@@ -288,7 +321,31 @@
 
 (module+ model8
   (require "../models/8-par.rkt")
-  (provide red lang_e lang_ec)
+  (provide red lang_e lang_ec redex_state_to_pict step
+           ex ex_and_store_sexp)
   (define lang_e (grammar->pict L #:nts '(e)))
   (define lang_ec (grammar->pict L #:nts '(E)))
-  (define red (jf->pict -->ax #:cases '("par"))))
+  (define-values (ex ex_sexp)
+    (pict-and-sexp
+     L
+     (let x (par x (seq (set x) x)))))
+  (define ex_and_store_sexp (list (term ·) ex_sexp))
+  (define red (jf->pict -->ax #:cases '("par")))
+  (define (redex_state_to_pict t)
+    (define p
+      (with-the-rewriters
+          (λ ()
+            (htl-append (⟨-pict)
+                        (term->pict/pretty-write L (car t))
+                        (mtext " , ")
+                        (term->pict/pretty-write L (cadr t) #:width 20)
+                        (⟩-pict)))))
+    (define space 10)
+    (cc-superimpose
+     (colorize (linewidth 4
+                          (rectangle (+ (pict-width p) space)
+                                     (+ (pict-height p) space)))
+               "gray")
+     p))
+  (define (step t)
+    (apply-reduction-relation -->traces t)))

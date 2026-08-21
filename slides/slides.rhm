@@ -5,6 +5,8 @@ import:
   "trees-with-subtrees.rhm" open
   "explain-evaluation-contexts.rhm" open
   "typeset.rkt"
+  "exn.rhm" open
+  "par.rhm" open
   "typeset.rkt" ! model1
   "typeset.rkt" ! model2
   "typeset.rkt" ! model4
@@ -12,29 +14,21 @@ import:
   "typeset.rkt" ! model6
   "typeset.rkt" ! model7
   "typeset.rkt" ! model8
+  "lib.rhm" open
   "../../logo/lockup.rhm"
+  "trace.rhm" open
   draw
   slideshow open
 
-current_font(draw.Font(~name: typeset.libertine, ~size: typeset.font_size))
-
-fun tp(x):
-  def margin = 20
-  def main = t(x).colorize("white")
-  overlay(rectangle(~fill: draw.Color(78, 42, 132), ~width: blank_client().width+margin*2, ~height: main.height+60),
-          main).pad(- margin)
-
 slide(
-  stack(
-    ~sep: 140,
-    tp(stack(
-         ~horiz: #'left,
-         @t{Reduction Semantics &},
-         @t{How to Read Them},
-       ).pad(~vert: 10).scale(3)),
-    lockup.horizontal_purple()
-  )
+  ~title: tp(stack(
+               ~horiz: #'left,
+               @t{Reduction Semantics &},
+               @t{How to Read Them},
+             ).pad(~vert: 10).scale(3)),
+  lockup.horizontal_purple().pad(~top: 140)
 )
+
 
 slide(
   ~title: tp("reduction semantics"),
@@ -79,18 +73,22 @@ slide(~title: tp("functions"),
       beside.baseline(~sep: 200,
                       stack(~sep: 40, model5.ec_cbv, model5.ax_cbv),
                       stack(~sep: 40, model5.ec_cbn, model5.ax_cbn)))
-slide(~title: tp("exceptions"),
-      stack(~sep: 60,
-            beside.topline(~sep: 100, model6.lang_e, model6.lang_ec),
-            stack.center(~sep: 60, & model6.red)))
+slide(~title: tp("exceptions: controlling the future of the computation"),
+      switch(
+        exn_explanation,
+        stack(~sep: 60,
+              beside.topline(~sep: 100, model6.lang_e, model6.lang_ec),
+              stack.center(~sep: 60, & model6.red))
+      ))
 slide(~title: tp("continuations"),
       stack(~sep: 60,
             beside.topline(~sep: 100, model7.lang_e, model7.lang_ec),
             stack.center(~sep: 60, & model7.red)))
-slide(~title: tp("sequentially consistent parallelism"),
-      stack(~sep: 60,
-            beside.topline(~sep: 100, model8.lang_e, model8.lang_ec),
-            stack.center(~sep: 60, model8.red)))
+slide(~title: tp("sequentially consistent parallelism, no axioms required"),
+      switch(stack(~sep: 100,
+                   beside.topline(~sep: 100, model8.lang_e, model8.lang_ec)),
+             overlay.top_right(model8.lang_ec,
+                               step_through_an_example(model8.ex_and_store_sexp))))
 
 
 // add lambda. rules are easy βv or β (call by need can be done without a store!

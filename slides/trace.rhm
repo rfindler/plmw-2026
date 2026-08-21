@@ -1,0 +1,220 @@
+#lang rhombus
+import:
+  rhombus/measure
+  slideshow open
+  draw
+  "lib.rhm" open
+  "typeset.rkt" ! model8
+
+export:
+  show_an_example
+  step_through_an_example
+
+fun show_an_example(t):
+  def sizer = blank_client()
+  def p = trace_to_pict(t)
+  p.scale(math.min(sizer.width/p.width,sizer.height/p.height))
+
+fun step_through_an_example(t):
+  def sizer = blank_client()
+  def p = trace_to_stepped_pict(t)
+  p.scale(.8) //(math.min(sizer.width/p.width,sizer.height/p.height))
+
+fun redex_state_to_pict(term):
+  def p = model8.redex_state_to_pict(term)
+  cond
+  | p is_a Pict:
+      p
+  | ~else Pict.from_handle(p)
+
+fun build_layers(term):
+  def layers = MutableMap{}
+  def term_to_pict = MutableMap{}
+  def links = MutableMap{}
+  recur loop(term = term, depth = 0):
+    def already_got = Map.get(term_to_pict,term,#false)
+    cond
+    | already_got: already_got
+    | ~else:
+        def the_pict = redex_state_to_pict(term)
+        term_to_pict[term] := the_pict
+        layers[depth] := [term_to_pict[term]] ++ Map.get(layers, depth, [])
+        for (next in model8.step(term)):
+          def child_pict = loop(next, depth+1)
+          links[the_pict] := [child_pict] ++ Map.get(links, the_pict, [])
+        the_pict
+  [layers,links]
+
+fun trace_to_stepped_pict(term):
+  def [picts, ...] = trace_to_stepped_list_of_picts(term)
+  def values(w,h):
+    for values(w = 0, h = 0):
+      each pict in [picts, ...]
+      values(math.max(pict.width,w),
+             math.max(pict.height,h))
+  for values(p = nothing):
+    each pict in [picts, ...]
+    switch(p,
+           overlay(~vert: #'top, blank(~width: w, ~height: h), pict))
+
+fun trace_to_stepped_list_of_picts(term):
+  def [layers,links] = build_layers(term)
+  fun no_arrows(visible_picts, current_layer):
+    recur build_pict(layer = 0):
+      def picts = Map.get(layers,layer,#false)
+      cond
+      | picts:
+          def this_layer_picts = beside(~sep: 40, & hide_some(visible_picts,layers[layer]))
+          def sep:
+            cond
+            | current_layer == 1:
+                40
+            | current_layer == 2:
+                40
+            | current_layer == layer + 1:
+                40
+            | ~else:
+                40
+          def next_layer = build_pict(layer+1)
+          cond
+          | layer == current_layer || layer == 0:
+              stack(~sep: sep, this_layer_picts, next_layer)
+          | layer == current_layer-1:
+              stack(~sep: sep, this_layer_picts, next_layer)
+          | ~else:
+              stack(~sep: sep, this_layer_picts.scale(1,1), next_layer)
+      | ~else: nothing
+  def largest_layer:
+    recur find_largest(layer = 0):
+      cond
+      | Map.get(layers, layer, #false):
+          find_largest(layer+1)
+      | ~else:
+          layer
+
+  fun build_todo_layer(layer):
+    for List:
+      each candidate in layers[layer]
+      skip_when Map.get(links,candidate,[]) == []
+      candidate
+    
+  List.cons(
+    add_some_edges(no_arrows(Set{layers[0][0]},0),links,[]),
+    recur build_stage(visible_picts = Set{},
+                      todo = [],
+                      layer = 0,
+                      done = []):
+      match todo
+      | []:
+          cond
+          | layer == largest_layer - 1:
+              []
+          | layer > 1:
+              build_stage(visible_picts, build_todo_layer(layer), layer+1, done)
+          | ~else:
+              build_stage(visible_picts, build_todo_layer(layer), layer+1, done)
+      | [next, todo, ...]:
+          def [nexts, ...] = Map.get(links,next,[])
+          def vis_plus_next = visible_picts.union(Set{next})
+          def next_vis = visible_picts.union(Set{next}).union(Set{nexts, ...})
+          [add_some_edges(red_rounded_rectangle(no_arrows(vis_plus_next, layer),next),links, done),
+           add_some_edges(no_arrows(next_vis, layer), links, [next] ++ done)]
+            ++ (build_stage(next_vis, [todo, ...], layer, [next] ++ done))
+  )
+
+
+fun red_rounded_rectangle(p, to_circles, ...):
+  red_thing(fun (to_circle):
+              rectangle(~width: to_circle.width+40, ~height: to_circle.height+40,
+                        ~rounded: -1/10,
+                        ~line: Color(255, 36, 0), //"pink",
+                        ~fill: "pink",
+                        ~line_width: 8),
+            p,
+            to_circles, ...)
+
+fun red_circle(p, to_circles, ...):
+  red_thing(fun (to_circle):
+              ellipse(~width: to_circle.width+40, ~height: to_circle.height+40,
+                      ~line: Color(255, 36, 0), //"pink",
+                      ~fill: "pink",
+                      ~line_width: 8),
+            p,
+            to_circles, ...)
+  
+fun red_thing(proc,p,to_circles, ...):
+  for values(p = p):
+    each to_circle in [to_circles, ...]
+    def ell = proc(to_circle)
+    pin(ell,
+        ~on: p,
+        ~at: Find.center(to_circle),
+        ~order: #'back,
+        ~pinhole: Find.center(ell))
+
+fun hide_some(visible_picts, picts):
+  for List:
+    each pict in picts
+    cond
+    | pict in visible_picts:
+        pict
+    | ~else:
+        pict.ghost()
+
+fun add_some_edges(pict, links, allowed_parents):
+  for values(pict = pict):
+    each (parent,children) in links
+    for values (pict = pict):
+      each child in children
+      cond
+      | parent in allowed_parents:
+          add_edge(pict, parent, child)
+      | ~else:
+          pict
+
+fun add_edge(p, parent, child):
+  def values(pl,pt) = Find.top_left(parent).in(p)
+  def values(cl,ct) = Find.top_left(child).in(p)
+  def values(pr,pb) = Find.bottom_right(parent).in(p)
+  def values(cr,cb) = Find.bottom_right(child).in(p)
+  def parent_width = pr - pl
+  def parent_height = pb - pt
+  def child_width = cr - cl
+  def child_height = cb - ct
+  overlay(
+    p,
+    ~horiz: #'left,
+    ~vert: #'top,
+    dc(fun(dc, dx, dy):
+         def old_rgn = dc.clipping_region
+         def sq1 = draw.Region()
+         sq1.rectangle([dx + pl, dy + pt, parent_width, parent_height])
+         def sq2 = draw.Region()
+         sq2.rectangle([dx + cl, dy + ct, child_width, child_height])
+         def clip = draw.Region()
+         clip.rectangle([dx,dy,p.width,p.height])
+         clip.subtract(sq1)
+         clip.subtract(sq2)
+         dc.clipping_region := clip
+         dc.line([dx + pl + parent_width/2, dy + pt + parent_height/2],
+                 [dx + cl + child_width/2, dy + ct + child_height/2])
+         dc.clipping_region := old_rgn,
+       ~width: parent.width,
+       ~height: parent.height))
+
+fun trace_to_pict(term):
+  def [layers,links] = build_layers(term)
+  def no_arrows:
+    recur build_pict(layer = 0):
+      def picts = Map.get(layers,layer,#false)
+      cond
+      | picts: stack(~sep: 100, beside(~sep: 40, & layers[layer]),build_pict(layer+1))
+      | ~else: nothing
+  for values(pict = no_arrows):
+    each (parent,children) in links
+    for values (pict = pict):
+      each child in children
+      add_edge(pict, parent, child)
+
+module main:
+  slide(step_through_an_example(model8.ex_and_store_sexp))

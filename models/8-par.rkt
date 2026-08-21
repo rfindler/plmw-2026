@@ -1,7 +1,7 @@
 #lang racket
 (require redex/reduction-semantics
          (prefix-in 7: "7-cont.rkt"))
-(provide L -->ax --> -->*)
+(provide L -->ax --> -->* -->traces)
 
 (define-extended-language L 7:L
   (e ::=
@@ -18,9 +18,6 @@
 (define-overriding-judgment-form L 7:-->ax
   #:mode (-->ax I I O O)
   #:contract (-->ax Σ e Σ e)
-
-  [--- "par"
-   (-->ax Σ (par v_1 v_2) Σ v_1)]
 )
 
 (define-overriding-judgment-form L 7:-->
@@ -41,6 +38,13 @@
   [(--> Σ_1 e_1 Σ_2 e_2) (-->* Σ_2 e_2 Σ_3 e_3)
    ------ "step"
    (-->* Σ_1 e_1 Σ_3 e_3)])
+
+(define-judgment-form L
+  #:mode (-->traces I O)
+  #:contract (-->traces (Σ e) (Σ e))
+  [(--> Σ_1 e_1 Σ_2 e_2)
+   -----
+   (-->traces (Σ_1 e_1) (Σ_2 e_2))])
 
 (test-judgment-holds (-->ax ·
                             (let x (or x tt))
@@ -80,6 +84,6 @@
                            · ff))
 
 (test-judgment-holds (-->* · (let x (par x (seq (set x) x)))
-                           (⊕ x = tt ·) tt))
+                           (⊕ x = tt ·) (par tt tt)))
 (test-judgment-holds (-->* · (let x (par x (seq (set x) x)))
-                           (⊕ x = tt ·) ff))
+                           (⊕ x = tt ·) (par ff tt)))

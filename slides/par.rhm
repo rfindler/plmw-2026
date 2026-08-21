@@ -1,0 +1,15 @@
+#lang rhombus
+import:
+  slideshow open
+  "lib.rhm" open
+
+export:
+  par_explanation
+
+def par_explanation:
+  blank()
+
+module main:
+  slide(~title: tp("par"),
+        par_explanation)
+  
