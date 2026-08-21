@@ -1,0 +1,16 @@
+#lang rhombus
+import:
+  slideshow open
+  draw
+  "typeset.rkt"
+
+export:
+  tp
+
+current_font(draw.Font(~name: typeset.libertine, ~size: typeset.font_size))
+
+fun tp(x):
+  def margin = 20
+  def main = t(x).colorize("white")
+  overlay(rectangle(~fill: draw.Color(78, 42, 132), ~width: blank_client().width+margin*2, ~height: main.height+60),
+          main).pad(- margin)

@@ -1,0 +1,34 @@
+#lang rhombus
+import:
+  slideshow open
+  "lib.rhm" open
+  "typeset.rkt" ! model1
+  "typeset.rkt" ! model2
+
+export:
+  exn_explanation
+
+/*
+
+show two examples as decompositions.
+
+example -> axiom -> what's left -> that's an E
+
+thus, an "E" is what's left after you do the axiom.
+
+we can use this idea to give rules for exceptions
+
+*/
+
+def exn_explanation:
+  switch(stack.left(~sep: 50,
+                    model1.ex,
+                    model1.example_used_axiom,
+                    model1.ex_ctxt),
+         stack.left(~sep: 50,
+                    model2.ex_1,
+                    model2.get_ax,
+                    model2.ex_ctxt))
+
+module main:
+  slide(exn_explanation)
