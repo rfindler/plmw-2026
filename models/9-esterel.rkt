@@ -4,15 +4,6 @@
 (provide L -->ax --> -->*)
 
 (define-extended-language L 8:L
-  (e ::=
-     ....
-     (par e e)
-     )
-  (E ::=
-     ....
-     (par e E)
-     (par E e))
-
   (Σ ::= · (⊕ x = b⊥ Σ))
   (b⊥ ::= b ⊥)
 
@@ -32,11 +23,13 @@
    ------------------ "get"
    (-->ax Σ x Σ v)])
 
+;; this is (woefully) incomplete
 (define-judgment-form L
   #:mode (∉Can⊥ I I I)
   #:contract (∉Can⊥ x Σ e)
-  [------
-   (∉Can⊥ x Σ (in-hole E x))])
+  [(where ⊥ (lookup Σ x))
+   ------
+   (∉Can⊥ x Σ x)])
 
 (define-metafunction L
   lookup : Σ x -> b⊥
@@ -70,7 +63,7 @@
 
   [(lookup-⊥ Σ x) (blocked Σ e) (∉Can⊥ x Σ e)
    ------------------ "cannot"
-   (--> Σ e (extend Σ x tt) e)])
+   (--> Σ e (extend Σ x ff) e)])
 
 (define-judgment-form L
   #:mode (blocked I I)

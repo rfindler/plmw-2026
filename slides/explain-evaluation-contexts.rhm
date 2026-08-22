@@ -11,15 +11,15 @@ export:
 
 def first_term = stack.left(
   ~sep: 40,
-  model2.ex,
-  model2.let_ax
+  model2.ex_1,
+  model2.get_ax,
+  model2.set_ax
   )
 
 def second_term = stack.left(
   ~sep: 40,
-  model2.ex_1,
-  model2.get_ax,
-  model2.set_ax
+  model2.ex,
+  model2.let_ax
   )
 
 def explain_evaluation_contexts:
@@ -31,12 +31,13 @@ def explain_evaluation_contexts:
                        second_term.pad(~right: first_term.width - second_term.width))))
 
 def new_rules:
-  beside.topline(& model4.ax)
+  stack(~sep: 60,
+        & model4.ax)
 
 
 def ex2_with_new_rules:
   stack(model2.ex,
-        animate(fun (n): blank(~height: n*40, ~width: 0)),
+        animate(fun (n): blank(~height: n*60, ~width: 0)),
         animate(fun (n):
                   new_rules.pad(~bottom: -(1-n)*new_rules.height).clip()).sustain())
 

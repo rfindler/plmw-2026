@@ -105,7 +105,7 @@ slide(
       t("http://www.github.com/rfindler/plmw-2026/")
     ),
     stack.left(
-      t(~font: current_font() with (weight = #'bold), "ICFP 2026 papers that use what you've learned:"),
+      t(~font: current_font() with (weight = #'bold), "ICFP 2026 papers that use what you’ve learned:"),
       stack.left(
         t("A Separation Logic for Parallel Time Complexity with Work and Span Credits"),
         t("Adequacy for Predicate Transformer Semantics"),
