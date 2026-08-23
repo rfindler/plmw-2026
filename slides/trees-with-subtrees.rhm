@@ -13,47 +13,53 @@ fun abstract_big_tree(w,h, subtree, ~line_width: line_width = 1):
   def p1 = draw.Pen(~color: if subtree | "gray" | "black", ~width: line_width)
   def p2 = draw.Pen(~color: "black", ~width: line_width)
   def p3 = draw.Pen(~color: "red", ~width: line_width)
-  dc(fun (dc :: draw.DC, dx, dy):
-       def r1 = random.Random(Array(1,11,0,1,2,0))
-       def r2 = random.Random(Array(1,1,1,1,2,1))
-       dc.pen := p1
-       dc.line([dx, dy+h], [dx+w/2, dy])
-       dc.line([dx+w, dy+h], [dx+w/2, dy])
-       def subtree_height = h*0.95
-       when subtree
-       | recur loop(ux = w/2, lx = w/2, y = 0):
-           when y .= math.floor(subtree_height*1/2)
-           | dc.line([dx + ux , dy + math.floor(y)], [dx + lx , dy + math.ceiling(y)])
-           when y < math.floor(subtree_height*1/2)
-           | def nux = ux + random_step(r2,1)
-             def nlx = lx + random_step(r2,1)
-             dc.pen := p3
-             dc.line([dx+ux,dy+y],[dx+nux, dy+y+1])
-             dc.line([dx+lx,dy+(subtree_height-y)],[dx+nlx, dy+(subtree_height-(y+1))])
-             loop(nux,nlx,y+1)
-       recur loop(x = 0, yl = h, yr = h, in_subtree = #false):
-         def subtree_bottom = subtree && x == math.floor(w/2-6)
-         when subtree_bottom
-         | dc.pen := p2
-           dc.line([dx+x,dy+yl],[dx+w/2,dy+subtree_height])
-           dc.line([dx+(w-x),dy+yr],[dx+w/2,dy+subtree_height])
-         when x == math.floor(w/2)
-         | dc.line([dx + math.floor(w/2), dy + yl], [dx + math.ceiling(w/2), dy + yr])
-         when x < math.floor(w/2)
-         | def nyl = yl + random_step(r1,2)
-           def nyr = yr + random_step(r1,2)
-           cond
-           | in_subtree || subtree_bottom:
-               dc.pen := p2
-           | ~else:
-               dc.pen := p1
-           dc.line([dx+x,dy+yl],[dx+x+1,dy+nyl])
-           dc.line([dx+(w-x),dy+yr],[dx+(w-(x+1)),dy+nyr])
-           loop(x+1, nyl, nyr, in_subtree || subtree_bottom),
-     ~width: w,
-     ~height: h)
+  fun draw_proc(dc :: draw.DC, dx, dy):
+    def r1 = random.Random(Array(1,11,0,1,2,0))
+    def r2 = random.Random(Array(1,1,1,1,2,1))
+    dc.pen := p1
+    dc.line([dx, dy+h], [dx+w/2, dy])
+    dc.line([dx+w, dy+h], [dx+w/2, dy])
+    def subtree_height = h*0.95
+    when subtree
+    | recur loop(ux = w/2, lx = w/2, y = 0):
+        when y .= math.floor(subtree_height*1/2)
+        | dc.line([dx + ux , dy + math.floor(y)], [dx + lx , dy + math.ceiling(y)])
+        when y < math.floor(subtree_height*1/2)
+        | def nux = ux + random_step(r2,1)
+          def nlx = lx + random_step(r2,1)
+          dc.pen := p3
+          dc.line([dx+ux,dy+y],[dx+nux, dy+y+1])
+          dc.line([dx+lx,dy+(subtree_height-y)],[dx+nlx, dy+(subtree_height-(y+1))])
+          loop(nux,nlx,y+1)
+    def mutable max_h = h
+    recur loop(x = 0, yl = h, yr = h, in_subtree = #false):
+      max_h := math.max(max_h,yl,yr)
+      def subtree_bottom = subtree && x == math.floor(w/2-6)
+      when subtree_bottom
+      | dc.pen := p2
+        dc.line([dx+x,dy+yl],[dx+w/2,dy+subtree_height])
+        dc.line([dx+(w-x),dy+yr],[dx+w/2,dy+subtree_height])
+      when x == math.floor(w/2)
+      | dc.line([dx + math.floor(w/2), dy + yl], [dx + math.ceiling(w/2), dy + yr])
+      when x < math.floor(w/2)
+      | def nyl = yl + random_step(r1,2)
+        def nyr = yr + random_step(r1,2)
+        cond
+        | in_subtree || subtree_bottom:
+            dc.pen := p2
+        | ~else:
+            dc.pen := p1
+        dc.line([dx+x,dy+yl],[dx+x+1,dy+nyl])
+        dc.line([dx+(w-x),dy+yr],[dx+(w-(x+1)),dy+nyr])
+        loop(x+1, nyl, nyr, in_subtree || subtree_bottom)
+    max_h
+  def max_h = draw_proc(draw.Bitmap([1,1]).make_dc(),0,0)
+  dc(draw_proc,
+     ~width: w+line_width*2,
+     ~height: max_h+line_width*2)
 
 module main:
+  slide(rectangle(~around: abstract_big_tree(200,200,#false)))
   slide(
     switch(abstract_big_tree(200,200,#false),
            abstract_big_tree(200,200,#true)).scale(2).pad(100)

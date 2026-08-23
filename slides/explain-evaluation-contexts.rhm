@@ -3,44 +3,84 @@ import:
   "typeset.rkt" ! model2
   "typeset.rkt" ! model3
   "typeset.rkt" ! model4
+  "trees-with-subtrees.rhm" open
   slideshow open
 
 export:
   explain_evaluation_contexts
   ex2_with_new_rules
 
-def first_term = stack.left(
+def unadorned_tree = abstract_big_tree(200,200,#false).scale(2)
+
+def tree_with_path = abstract_big_tree(200,200,#true).scale(2)
+
+def ec = model3.ec_lang.pad(~left: 20)
+
+def first_term_raw = stack.left(
   ~sep: 40,
   model2.ex_1,
   model2.get_ax,
   model2.set_ax
-  )
+  ).pad(~left: 80)
 
-def second_term = stack.left(
+def second_term_raw = stack.left(
   ~sep: 40,
   model2.ex,
   model2.let_ax
-  )
+  ).pad(~left: 80)
+
+def term_spacer = overlay(first_term_raw,second_term_raw).ghost()
+
+def first_term = overlay.left(first_term_raw,term_spacer)
+def second_term = overlay.left(second_term_raw,term_spacer)
+
+fun wipe_left(p):
+  overlay.right(p.ghost(),
+                animate(fun (n):
+                          p.pad(~left: -(1-n)*p.width).clip()))
+
+fun unfurl_left(p):
+  animate(~extent: 1,
+          fun (n):
+            p.pad(~left: -(1-n)*p.width).clip())
+
+fun unfurl_right(p):
+  animate(~extent: 1,
+          fun (n):
+            p.pad(~right: -(1-n)*p.width).clip())
+
+fun furl_left(p):
+  animate(~extent: 1,
+          fun (n):
+            p.pad(~left: -(n)*p.width).clip())
+
+fun furl_right(p):
+  animate(~extent: 1,
+          fun (n):
+            p.pad(~right: -(n)*p.width).clip())
+
+fun unfurl_bottom(p):
+  animate(~extent: 1,
+          fun (n):
+            p.pad(~bottom: -(1-n)*p.height).clip())
+
+
 
 def explain_evaluation_contexts:
-  beside(model3.ec_lang,
-         beside(animate(fun (n): blank(~width: n*100, ~height: 0)),
-                switch(animate(~extent: 1,
-                               fun (n):
-                                 first_term.pad(~right: -(1-n)*first_term.width).clip()).sustain(),
-                       second_term.pad(~right: first_term.width - second_term.width))))
-
-def new_rules:
-  stack(~sep: 60,
-        & model4.ax)
-
+  def tree_with_path = abstract_big_tree(200,200,#true).scale(2)
+  switch(
+    overlay(unadorned_tree, wipe_left(tree_with_path)),
+    beside(tree_with_path, unfurl_left(ec)),
+    beside(furl_left(tree_with_path), ec, unfurl_right(first_term)),
+    beside(ec, switch(beside(furl_left(first_term), unfurl_left(second_term)),
+                      second_term))
+  )
 
 def ex2_with_new_rules:
   stack(model2.ex,
-        animate(fun (n): blank(~height: n*60, ~width: 0)),
-        animate(fun (n):
-                  new_rules.pad(~bottom: -(1-n)*new_rules.height).clip()).sustain())
+        unfurl_bottom(stack(~sep: 60, & model4.ax).pad(~top: 60))).sustain()
 
 module main:
   slide(explain_evaluation_contexts)
   slide(ex2_with_new_rules)
+  slide(t("hi"))
