@@ -1,4 +1,18 @@
-Reduction Semantics and How to Read Them
+# Reduction Semantics and How to Read Them
+
+This repository contains the source code and Redex models for a talk from PLMW at ICFP 2026.
+
+In a recent version of Racket, use this command to install the package
+
+```sh
+$ raco pkg install plmw-2026
+```
+and then this command to see the slides:
+```sh
+$ rhombus -l plmw-2026/slides
+```
+
+## Talk Abstract
 
 The semantics of a programming language is often given by defining a set of simplification rules (e.g., `1+1` simplifies to `2`, `(car (cons 1 '())` simplifies to `1`) and a set of contexts where these simplifications are allowed to occur (e.g., in the test position of an `if`, but not in the branches). These steps are then chained together into reduction sequences that start from an arbitrary program in the language and end with the program's final result (or never end, if the program runs forever).
 

@@ -52,4 +52,4 @@ def ex2_with_new_rules:
 module main:
   slide(explain_evaluation_contexts)
   slide(ex2_with_new_rules)
-  slide(t("hi"))
+  slide(t("just have something here to check"))

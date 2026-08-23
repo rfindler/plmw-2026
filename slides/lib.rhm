@@ -13,8 +13,12 @@ export:
   unfurl_top
   furl_left
   furl_right
+  bt
 
 current_font(draw.Font(~name: typeset.libertine, ~size: typeset.font_size))
+
+fun bt(x):
+  t(~font: current_font() with (weight = #'bold), x)
 
 fun tp(x):
   def margin = 20

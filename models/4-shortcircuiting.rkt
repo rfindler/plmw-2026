@@ -20,7 +20,8 @@
      (or E e)
      (not E)
      (seq E e))
-  (v ::= b)
+  (v ::= tt
+     ff)
 
   (Σ ::= · (⊕ x = v Σ))
   

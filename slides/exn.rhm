@@ -20,15 +20,31 @@ we can use this idea to give rules for exceptions
 
 */
 
+def ex_label = bt("expression")
+def ax_label = bt("axiom")
+def ec_label = stack.right(bt("evaluation"),
+                           bt("context"))
+
+def label_spacer = overlay(ex_label,ax_label,ec_label).ghost()
+
+fun add_label(lab, rhs, ~topline: topline = #true):
+  def bsd = if topline | beside.topline | beside.baseline
+  bsd(~sep: 20,
+      if topline | overlay.topline_right(lab,label_spacer) | overlay.baseline_right(lab,label_spacer),
+      rhs)
+
+fun switch_but_fill(p1,p2, ~topline: topline = #true):
+  def ovl_left = if topline | overlay.left_topline | overlay.left_baseline
+  def ovl_right = if topline | overlay.right_topline | overlay.right_baseline
+  def spacer = overlay.topline(p1,p2).ghost()
+  switch(ovl_right(ovl_left(spacer,furl_left(p1)),unfurl_left(p2)),
+         ovl_left(spacer,p2))
+
 def exn_explanation:
-  switch(stack.left(~sep: 50,
-                    model1.ex,
-                    model1.example_used_axiom,
-                    model1.ex_ctxt),
-         stack.left(~sep: 50,
-                    model2.ex_1,
-                    model2.get_ax,
-                    model2.ex_ctxt))
+  stack.left(~sep: 80,
+             add_label(ex_label,switch_but_fill(model1.ex, model2.ex_1)),
+             add_label(~topline: #false, ax_label,switch_but_fill(~topline: #false, model1.example_used_axiom, model2.get_ax)).pad(~top: -40),
+             add_label(ec_label,switch_but_fill(model1.ex_ctxt, model2.ex_ctxt)))
 
 module main:
   slide(exn_explanation)

@@ -63,8 +63,11 @@ slide(~title: tp("evaluation contexts: paths from the root to the axiom use"),
       explain_evaluation_contexts)
 slide(~title: tp("those rules aren’t the usual ones: can we fix them?"), ex2_with_new_rules)
 slide(tp("careful—the next slide has the answer!"))
-slide(~title: tp("we need only two evaluation contexts"), model4.ec_lang)
-slide(~title: tp("some notation"), stack(~sep: 100,
+slide(~title: tp("we need only one evaluation context each"),
+      beside(~sep: 100,
+             model4.ec_lang,
+             stack(~sep: 40, & model4.ax)))
+slide(~title: tp("some notation"), stack(~sep: 160,
                                          beside(~sep: 40, model4.decomp, abstract_big_tree(200,200,#true, ~line_width: 3).scale(2/3)),
                                          model4.red))
 slide(~title: tp("functions"),
@@ -89,8 +92,8 @@ slide(~title: tp("sequentially consistent parallelism (no new axioms required)")
                                step_through_an_example(model8.ex_and_store_sexp))))
 
 slide(~title: tp("a taste of esterel: parallelism and determinism"),
-      stack(~sep: 60,
-            & model9.red))
+      overlay.top_right(stack.left(~sep: 60, & model9.red),
+                        model8.lang_ec.pad(~left: 0,~top: 60)))
       
 slide(
   ~title: tp("reduction semantics"),
