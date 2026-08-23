@@ -4,6 +4,7 @@ import:
   "typeset.rkt" ! model3
   "typeset.rkt" ! model4
   "trees-with-subtrees.rhm" open
+  "lib.rhm" open
   slideshow open
 
 export:
@@ -33,38 +34,6 @@ def term_spacer = overlay(first_term_raw,second_term_raw).ghost()
 
 def first_term = overlay.left(first_term_raw,term_spacer)
 def second_term = overlay.left(second_term_raw,term_spacer)
-
-fun wipe_left(p):
-  overlay.right(p.ghost(),
-                animate(fun (n):
-                          p.pad(~left: -(1-n)*p.width).clip()))
-
-fun unfurl_left(p):
-  animate(~extent: 1,
-          fun (n):
-            p.pad(~left: -(1-n)*p.width).clip())
-
-fun unfurl_right(p):
-  animate(~extent: 1,
-          fun (n):
-            p.pad(~right: -(1-n)*p.width).clip())
-
-fun furl_left(p):
-  animate(~extent: 1,
-          fun (n):
-            p.pad(~left: -(n)*p.width).clip())
-
-fun furl_right(p):
-  animate(~extent: 1,
-          fun (n):
-            p.pad(~right: -(n)*p.width).clip())
-
-fun unfurl_bottom(p):
-  animate(~extent: 1,
-          fun (n):
-            p.pad(~bottom: -(1-n)*p.height).clip())
-
-
 
 def explain_evaluation_contexts:
   def tree_with_path = abstract_big_tree(200,200,#true).scale(2)

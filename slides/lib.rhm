@@ -6,6 +6,13 @@ import:
 
 export:
   tp
+  wipe_left
+  unfurl_left
+  unfurl_right
+  unfurl_bottom
+  unfurl_top
+  furl_left
+  furl_right
 
 current_font(draw.Font(~name: typeset.libertine, ~size: typeset.font_size))
 
@@ -14,3 +21,39 @@ fun tp(x):
   def main = t(x).colorize("white")
   overlay(rectangle(~fill: draw.Color(78, 42, 132), ~width: blank_client().width+margin*2, ~height: main.height+60),
           main).pad(- margin)
+
+
+fun wipe_left(p):
+  overlay.right(p.ghost(),
+                animate(fun (n):
+                          p.pad(~left: -(1-n)*p.width).clip()))
+
+fun unfurl_left(p):
+  animate(~extent: 1,
+          fun (n):
+            p.pad(~left: -(1-n)*p.width).clip())
+
+fun unfurl_right(p):
+  animate(~extent: 1,
+          fun (n):
+            p.pad(~right: -(1-n)*p.width).clip())
+
+fun furl_left(p):
+  animate(~extent: 1,
+          fun (n):
+            p.pad(~left: -(n)*p.width).clip())
+
+fun furl_right(p):
+  animate(~extent: 1,
+          fun (n):
+            p.pad(~right: -(n)*p.width).clip())
+
+fun unfurl_bottom(p):
+  animate(~extent: 1,
+          fun (n):
+            p.pad(~bottom: -(1-n)*p.height).clip())
+
+fun unfurl_top(p):
+  animate(~extent: 1,
+          fun (n):
+            p.pad(~top: -(1-n)*p.height).clip())

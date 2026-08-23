@@ -1,6 +1,7 @@
 #lang rhombus
 import:
   "typeset.rkt" ! model2
+  "lib.rhm" open
   slideshow open
 
 export:
@@ -12,7 +13,19 @@ def right_arrow_star = t("→*").pad(~right: 12)
 
 def troublesome_step = stack.left(model2.ex_st1, model2.ex_1)
 
-def ex2_slide = stack(
+fun pre_furl_left(p):
+  overlay.left(p,
+               unfurl_left(p).time_pad(~before: -1))
+
+fun pre_furl_top(p):
+  overlay.left(p,
+               unfurl_top(p).time_pad(~before: -1))
+
+def two_axioms = beside(~sep: 100, model2.get_ax, model2.set_ax)
+
+def axiom_gap = overlay(model2.seq_ax,model2.let_ax,model2.get_ax,model2.set_ax,two_axioms).ghost()
+
+def step_animation = stack(
   ~sep: 60,
   beside(~sep: between_steps,
          ~order: #'back,
@@ -25,24 +38,30 @@ def ex2_slide = stack(
                                                                   ~fill: "pink",
                                                                   ~rounded: #'default,
                                                                   ~refocus: troublesome_step).time_pad(~before: 5),
-                                                        troublesome_step),
+                                                        pre_furl_left(troublesome_step)),
                                                 t("↓").time_pad(~before: 3)),
                                    right_arrow.time_pad(~before: 1),
-                                   stack.left(model2.ex_st1, model2.ex_2).time_pad(~before: 1),
+                                   pre_furl_left(stack.left(model2.ex_st1, model2.ex_2)).time_pad(~before: 1),
                                    right_arrow_star.time_pad(~before: 2),
-                                   stack.left(model2.ex_st1, model2.ex_3).time_pad(~before: 2)).time_pad(~before: 1),
+                                   pre_furl_left(stack.left(model2.ex_st1, model2.ex_3)).time_pad(~before: 2)).time_pad(~before: 1),
                     beside.topline(~sep: between_steps,
-                                   stack.left(model2.ex_st2, model2.ex_4),
+                                   pre_furl_top(stack.left(model2.ex_st2, model2.ex_4)),
                                    right_arrow_star.time_pad(~before: 1),
-                                   stack.left(model2.ex_st2, model2.ex_6).time_pad(~before: 1)).time_pad(~before: 4))),
-  overlay(switch(model2.seq_ax.ghost(),
+                                   pre_furl_left(stack.left(model2.ex_st2, model2.ex_6)).time_pad(~before: 1)).time_pad(~before: 4))),
+  overlay(axiom_gap,
+          switch(blank(),
                  model2.let_ax,
                  model2.get_ax,
-                 model2.seq_ax.ghost(),
+                 blank(),
                  model2.set_ax,
-                 model2.seq_ax.ghost(),
-                 beside(~sep: 100, model2.get_ax, model2.set_ax)))
+                 blank(),
+                 two_axioms))
   )
+
+def ex2_slide:
+  magic_move(~join: SequentialJoin.splice,
+             model2.ex,
+             step_animation)
 
 module main:
   slide(ex2_slide)
