@@ -13,7 +13,7 @@ export:
 fun show_an_example(t):
   def sizer = blank_client()
   def p = trace_to_pict(t)
-  p.scale(math.min(sizer.width/p.width,sizer.height/p.height))
+  p.scale(math.min(sizer.width/p.width,sizer.height/p.height)).scale(.8)
 
 fun step_through_an_example(t):
   def sizer = blank_client()

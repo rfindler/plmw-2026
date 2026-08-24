@@ -87,8 +87,7 @@ slide(~title: tp("continuations"),
 slide(~title: tp("sequentially consistent parallelism (no new axioms required)"),
       switch(stack(~sep: 100,
                    beside.topline(~sep: 100, model8.lang_e, model8.lang_ec)),
-             overlay.top_right(model8.lang_ec,
-                               step_through_an_example(model8.ex_and_store_sexp))))
+             show_an_example(model8.ex_and_store_sexp)))
 
 slide(~title: tp("a taste of esterel: parallelism and determinism"),
       overlay.top_right(stack.left(~sep: 60, & model9.red),
@@ -106,16 +105,16 @@ slide(
     stack.left(
       t(~font: current_font() with (weight = #'bold), "ICFP 2026 papers that use what you’ve learned:"),
       stack.left(
-        t("A Separation Logic for Parallel Time Complexity with Work and Span Credits"),
-        t("Adequacy for Predicate Transformer Semantics"),
-        t("An Exploration of First-Class Constrained Types"),
-        t("Completeness of Iris-Based Program Logics"),
-        t("Demand-on-Demand Control-Flow Analysis"),
-        t("HMCFA: A Precise and Practical Big-Step Control Flow Analysis for Effect Handlers"),
-        stack.left(t("Inlining as a space optimization: a simple time- and space-invariant"),
-                   beside.baseline(blank(~width:20), t("implementation of the weak lambda-calculus"))),
-        t("Tail Modulo Async-Await"),
-        t("When Types Intersect and Effects Get Handled"),
+        t("• A Separation Logic for Parallel Time Complexity with Work and Span Credits"),
+        t("• Adequacy for Predicate Transformer Semantics"),
+        t("• An Exploration of First-Class Constrained Types"),
+        t("• Completeness of Iris-Based Program Logics"),
+        t("• Demand-on-Demand Control-Flow Analysis"),
+        t("• HMCFA: A Precise and Practical Big-Step Control Flow Analysis for Effect Handlers"),
+        stack.left(t("• Inlining as a space optimization: a simple time- and space-invariant"),
+                   beside.baseline(blank(~width:40), t("implementation of the weak lambda-calculus"))),
+        t("• Tail Modulo Async-Await"),
+        t("• When Types Intersect and Effects Get Handled"),
       ).scale(.8)
     )
   )
