@@ -16,11 +16,10 @@ import:
   "typeset.rkt" ! model8
   "typeset.rkt" ! model9
   "lib.rhm" open
-  "../../logo/lockup.rhm"
   "trace.rhm" open
   draw
   slideshow open
-
+  "lockup.rhm"
 
 slide(
   ~title: tp(stack(

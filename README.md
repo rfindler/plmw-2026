@@ -7,10 +7,12 @@ In a recent version of Racket, use this command to install the package
 ```sh
 $ raco pkg install plmw-2026
 ```
-and then this command to see the slides:
+and then this command to see the slides
 ```sh
-$ rhombus -l plmw-2026/slides
+$ racket -l plmw-2026
 ```
+
+To see the models, after the package is installed, open DrRacket and use the `File|Open Require Path...` menu item. Enter `plmw-2026/mod/` and choose one of the models (or use the `whereis` package or the Emacs mode).
 
 ## Talk Abstract
 

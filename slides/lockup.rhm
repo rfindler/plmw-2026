@@ -1,0 +1,62 @@
+#lang rhombus
+import:
+  rhombus/meta open
+  rhombus/runtime_path
+  pict open
+
+export:
+  horizontal_purple
+  horizontal_white
+  seal_width
+  seal_words_gap_size
+
+runtime_path.def seal_png: "seal.png"
+runtime_path.def nwu_png: "nwu.png"
+runtime_path.def nwu_white_png: "nwu-white.png"
+
+def mutable seal: #false
+def mutable nwu: #false
+def mutable nwu_white: #false
+
+fun get_seal():
+  cond
+  | seal: seal
+  | ~else:
+      seal := bitmap(seal_png)
+      seal
+
+fun get_nwu():
+  cond
+  | nwu: nwu
+  | ~else:
+      nwu := bitmap(nwu_png)
+      nwu
+
+fun get_nwu_white():
+  cond
+  | nwu_white: nwu_white
+  | ~else:
+      nwu_white := bitmap(nwu_white_png)
+      nwu_white
+
+fun horizontal_purple():
+  def seal = get_seal()
+  def nwu = get_nwu()
+  beside(~sep: seal_words_gap_size,
+         seal.scale(nwu.height / seal.height),
+         nwu).scale(scale_factor)
+
+fun horizontal_white():
+  def seal = get_seal()
+  def nwu = get_nwu_white()
+  beside(~sep: seal_words_gap_size,
+         seal.scale(nwu.height / seal.height),
+         nwu).scale(scale_factor)
+
+def scale_factor: 1/6
+
+fun seal_scale_factor():
+  (get_nwu().height / get_seal().height)
+
+fun seal_width(): get_seal().width * seal_scale_factor() * scale_factor
+def seal_words_gap_size = 80
