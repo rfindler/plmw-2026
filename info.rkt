@@ -3,6 +3,7 @@
 (define deps '("base"
                "gui-lib"
                "pict-lib"
-               ["redex-lib" #:version "1.23"]
-               "redex-pict-lib"
-               "rhombus-lib"))
+               "redex-lib"
+               ["redex-pict-lib" #:version "1.11"]
+               "rhombus-lib"
+               "rhombus-slideshow-lib"))
